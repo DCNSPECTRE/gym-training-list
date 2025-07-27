@@ -12,7 +12,7 @@
     <!-- Babel to compile JSX in the browser -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
-    <!-- **FIX:** Load Firebase compatibility libraries -->
+    <!-- Firebase compatibility libraries -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
@@ -24,6 +24,10 @@
     <script type="text/babel">
         // --- React Code Starts Here ---
         const { useState, useEffect } = React;
+        
+        // --- Firebase Initialization ---
+        // **IMPORTANT**: Paste your Firebase config object here!
+
         const firebaseConfig = {
           apiKey: "AIzaSyBGDJu5BGGDeIjVOJLg4qJ_RLcomBHP-k4",
           authDomain: "gymtracker-a0bf6.firebaseapp.com",
@@ -34,7 +38,7 @@
           measurementId: "G-Y2PQZRJ3VQ"
         };
         
-        // **FIX:** Initialize Firebase using the global `firebase` object
+        // Initialize Firebase using the global `firebase` object
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
@@ -214,8 +218,8 @@
             useEffect(() => {
                 if (!userId) return;
                 setIsLoading(true);
-                // **FIX:** Use global db object and its methods
-                const docRef = db.collection(`artifacts/${appId}/users/${userId}/workout-tracker`).doc(docId);
+                // **FIX:** Simplified database path
+                const docRef = db.collection('user-workouts').doc(userId).collection('sessions').doc(docId);
 
                 const unsubscribe = docRef.onSnapshot((docSnap) => {
                     if (docSnap.exists) {
@@ -246,10 +250,10 @@
                 setWorkoutData(updatedExerciseData);
 
                 try {
-                    // **FIX:** Use global db object and its methods
-                    const docRef = db.collection(`artifacts/${appId}/users/${userId}/workout-tracker`).doc(docId);
+                    // **FIX:** Simplified database path
+                    const docRef = db.collection('user-workouts').doc(userId).collection('sessions').doc(docId);
                     await docRef.set({ exercises: updatedExerciseData }, { merge: true });
-                } catch (error) {
+                } catch (error) => {
                     console.error("Error saving workout data:", error);
                 }
             };
@@ -297,28 +301,15 @@
             const [isAuthReady, setIsAuthReady] = useState(false);
 
             useEffect(() => {
-                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-                const authSignIn = async () => {
-                    try {
-                        if (initialAuthToken) {
-                            await auth.signInWithCustomToken(initialAuthToken);
-                        } else {
-                            await auth.signInAnonymously();
-                        }
-                    } catch (error) {
-                        console.error("Authentication failed:", error);
-                        setIsAuthReady(true); 
-                    }
-                };
-
-                authSignIn();
-
+                // **FIX:** Simplified authentication, removed dependency on __initial_auth_token
                 const unsubscribe = auth.onAuthStateChanged((user) => {
                     if (user) {
                         setUserId(user.uid);
                     } else {
-                        setUserId(null);
+                        // If no user, sign in anonymously
+                        auth.signInAnonymously().catch((error) => {
+                            console.error("Anonymous sign-in failed:", error);
+                        });
                     }
                     setIsAuthReady(true);
                 });
