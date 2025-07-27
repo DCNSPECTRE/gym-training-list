@@ -11,17 +11,12 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <!-- Babel to compile JSX in the browser -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Firebase Libraries -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        window.firebaseApp = initializeApp;
+    
+    <!-- **FIX:** Load Firebase compatibility libraries -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        window.firebaseAuth = { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken };
-
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        window.firebaseFirestore = { getFirestore, doc, setDoc, onSnapshot };
-    </script>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900">
     <div id="root"></div>
@@ -34,14 +29,10 @@
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         
-        // FIX: Directly assign the function, don't destructure it.
-        const initializeApp = window.firebaseApp;
-        const { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } = window.firebaseAuth;
-        const { getFirestore, doc, setDoc, onSnapshot } = window.firebaseFirestore;
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        // **FIX:** Initialize Firebase using the global `firebase` object
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
         // --- DATA: Based on your workout plan ---
         const workoutPlan = {
@@ -218,11 +209,11 @@
             useEffect(() => {
                 if (!userId) return;
                 setIsLoading(true);
-                const docPath = `artifacts/${appId}/users/${userId}/workout-tracker/${docId}`;
-                const docRef = doc(db, docPath);
+                // **FIX:** Use global db object and its methods
+                const docRef = db.collection(`artifacts/${appId}/users/${userId}/workout-tracker`).doc(docId);
 
-                const unsubscribe = onSnapshot(docRef, (docSnap) => {
-                    if (docSnap.exists()) {
+                const unsubscribe = docRef.onSnapshot((docSnap) => {
+                    if (docSnap.exists) {
                         setWorkoutData(docSnap.data().exercises || {});
                     } else {
                         setWorkoutData({});
@@ -250,9 +241,9 @@
                 setWorkoutData(updatedExerciseData);
 
                 try {
-                    const docPath = `artifacts/${appId}/users/${userId}/workout-tracker/${docId}`;
-                    const docRef = doc(db, docPath);
-                    await setDoc(docRef, { exercises: updatedExerciseData }, { merge: true });
+                    // **FIX:** Use global db object and its methods
+                    const docRef = db.collection(`artifacts/${appId}/users/${userId}/workout-tracker`).doc(docId);
+                    await docRef.set({ exercises: updatedExerciseData }, { merge: true });
                 } catch (error) {
                     console.error("Error saving workout data:", error);
                 }
@@ -306,20 +297,19 @@
                 const authSignIn = async () => {
                     try {
                         if (initialAuthToken) {
-                            await signInWithCustomToken(auth, initialAuthToken);
+                            await auth.signInWithCustomToken(initialAuthToken);
                         } else {
-                            await signInAnonymously(auth);
+                            await auth.signInAnonymously();
                         }
                     } catch (error) {
                         console.error("Authentication failed:", error);
-                        // If auth fails, still allow the app to render but without persistence.
                         setIsAuthReady(true); 
                     }
                 };
 
                 authSignIn();
 
-                const unsubscribe = onAuthStateChanged(auth, (user) => {
+                const unsubscribe = auth.onAuthStateChanged((user) => {
                     if (user) {
                         setUserId(user.uid);
                     } else {
