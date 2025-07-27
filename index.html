@@ -12,7 +12,7 @@
     <!-- Babel to compile JSX in the browser -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
-    <!-- Firebase compatibility libraries -->
+    <!-- Firebase compatibility libraries (more reliable for single-file setups) -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
@@ -26,75 +26,27 @@
         const { useState, useEffect } = React;
         
         // --- Firebase Initialization ---
-        // **IMPORTANT**: Paste your Firebase config object here!
-
+        // Your personal Firebase configuration is now hardcoded here.
         const firebaseConfig = {
           apiKey: "AIzaSyBGDJu5BGGDeIjVOJLg4qJ_RLcomBHP-k4",
           authDomain: "gymtracker-a0bf6.firebaseapp.com",
           projectId: "gymtracker-a0bf6",
-          storageBucket: "gymtracker-a0bf6.firebasestorage.app",
+          storageBucket: "gymtracker-a0bf6.appspot.com",
           messagingSenderId: "635629132798",
-          appId: "1:635629132798:web:7da6f0e5134ffa348b3eaf",
-          measurementId: "G-Y2PQZRJ3VQ"
+          appId: "1:635629132798:web:7da6f0e5134ffa348b3eaf"
         };
         
-        // Initialize Firebase using the global `firebase` object
+        // Initialize Firebase using the global `firebase` object provided by the compat scripts
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
         // --- DATA: Based on your workout plan ---
         const workoutPlan = {
-          "Day 1": {
-            name: "Upper Body Strength A",
-            exercises: [
-              { name: "Pull-Ups (or Lat Pulldowns)", sets: 3, reps: "6-10", type: "strength" },
-              { name: "Dumbbell Shoulder Press", sets: 3, reps: "8-12", type: "strength" },
-              { name: "Bent-Over Rows", sets: 3, reps: "8-12", type: "strength" },
-              { name: "Dumbbell Incline Press", sets: 3, reps: "10-15", type: "strength" },
-              { name: "Lateral Raises", sets: 3, reps: "12-15", type: "strength" },
-              { name: "Bicep Curls", sets: 3, reps: "10-15", type: "strength" },
-              { name: "Tricep Pushdowns", sets: 3, reps: "10-15", type: "strength" },
-              { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio" },
-            ],
-          },
-          "Day 2": {
-            name: "Lower Body Strength A",
-            exercises: [
-              { name: "Squats", sets: 4, reps: "8-12", type: "strength" },
-              { name: "Romanian Deadlifts", sets: 3, reps: "10-15", type: "strength" },
-              { name: "Leg Press", sets: 3, reps: "10-15", type: "strength" },
-              { name: "Leg Curls", sets: 3, reps: "12-15", type: "strength" },
-              { name: "Calf Raises", sets: 4, reps: "15-20", type: "strength" },
-              { name: "Plank", sets: 3, reps: "30-60s", type: "core" },
-              { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio" },
-            ],
-          },
-          "Day 3": {
-            name: "Upper Body Strength B",
-            exercises: [
-              { name: "T-Bar Row (or Seated Cable Row)", sets: 4, reps: "8-12", type: "strength" },
-              { name: "Overhead Press", sets: 3, reps: "8-12", type: "strength" },
-              { name: "Dumbbell Flyes", sets: 3, reps: "12-15", type: "strength" },
-              { name: "Face Pulls", sets: 3, reps: "15-20", type: "strength" },
-              { name: "Hammer Curls", sets: 3, reps: "10-15", type: "strength" },
-              { name: "Overhead Tricep Extension", sets: 3, reps: "10-15", type: "strength" },
-              { name: "Hanging Knee Raises", sets: 3, reps: "10-15", type: "core" },
-              { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio" },
-            ],
-          },
-          "Day 4": {
-            name: "Lower Body Strength B & Core",
-            exercises: [
-              { name: "Deadlifts (Conventional or Sumo)", sets: 3, reps: "5-8", type: "strength" },
-              { name: "Lunges (Dumbbell or Bodyweight)", sets: 3, reps: "10-12 / leg", type: "strength" },
-              { name: "Goblet Squats", sets: 3, reps: "12-15", type: "strength" },
-              { name: "Glute Bridges (or Hip Thrusts)", sets: 3, reps: "12-15", type: "strength" },
-              { name: "Leg Extensions", sets: 3, reps: "12-15", type: "strength" },
-              { name: "Russian Twists", sets: 3, reps: "15-20 / side", type: "core" },
-              { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio" },
-            ],
-          },
+          "Day 1": { name: "Upper Body Strength A", exercises: [ { name: "Pull-Ups (or Lat Pulldowns)", sets: 3, reps: "6-10", type: "strength" }, { name: "Dumbbell Shoulder Press", sets: 3, reps: "8-12", type: "strength" }, { name: "Bent-Over Rows", sets: 3, reps: "8-12", type: "strength" }, { name: "Dumbbell Incline Press", sets: 3, reps: "10-15", type: "strength" }, { name: "Lateral Raises", sets: 3, reps: "12-15", type: "strength" }, { name: "Bicep Curls", sets: 3, reps: "10-15", type: "strength" }, { name: "Tricep Pushdowns", sets: 3, reps: "10-15", type: "strength" }, { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio" }, ]},
+          "Day 2": { name: "Lower Body Strength A", exercises: [ { name: "Squats", sets: 4, reps: "8-12", type: "strength" }, { name: "Romanian Deadlifts", sets: 3, reps: "10-15", type: "strength" }, { name: "Leg Press", sets: 3, reps: "10-15", type: "strength" }, { name: "Leg Curls", sets: 3, reps: "12-15", type: "strength" }, { name: "Calf Raises", sets: 4, reps: "15-20", type: "strength" }, { name: "Plank", sets: 3, reps: "30-60s", type: "core" }, { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio" }, ]},
+          "Day 3": { name: "Upper Body Strength B", exercises: [ { name: "T-Bar Row (or Seated Cable Row)", sets: 4, reps: "8-12", type: "strength" }, { name: "Overhead Press", sets: 3, reps: "8-12", type: "strength" }, { name: "Dumbbell Flyes", sets: 3, reps: "12-15", type: "strength" }, { name: "Face Pulls", sets: 3, reps: "15-20", type: "strength" }, { name: "Hammer Curls", sets: 3, reps: "10-15", type: "strength" }, { name: "Overhead Tricep Extension", sets: 3, reps: "10-15", type: "strength" }, { name: "Hanging Knee Raises", sets: 3, reps: "10-15", type: "core" }, { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio" }, ]},
+          "Day 4": { name: "Lower Body Strength B & Core", exercises: [ { name: "Deadlifts (Conventional or Sumo)", sets: 3, reps: "5-8", type: "strength" }, { name: "Lunges (Dumbbell or Bodyweight)", sets: 3, reps: "10-12 / leg", type: "strength" }, { name: "Goblet Squats", sets: 3, reps: "12-15", type: "strength" }, { name: "Glute Bridges (or Hip Thrusts)", sets: 3, reps: "12-15", type: "strength" }, { name: "Leg Extensions", sets: 3, reps: "12-15", type: "strength" }, { name: "Russian Twists", sets: 3, reps: "15-20 / side", type: "core" }, { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio" }, ]},
         };
         
         const getTodayDateString = () => {
@@ -112,100 +64,24 @@
             };
 
             if (isCardio) {
-                return (
-                    <div className="flex items-center gap-2 p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
-                        <span className="text-xl">❤️</span>
-                        <span className="font-medium text-sm text-gray-700 dark:text-gray-300">Target: {targetReps}</span>
-                    </div>
-                );
+                return ( <div className="flex items-center gap-2 p-2 rounded-lg bg-gray-100 dark:bg-gray-700"> <span className="text-xl">❤️</span> <span className="font-medium text-sm text-gray-700 dark:text-gray-300">Target: {targetReps}</span> </div> );
             }
             
-            return (
-                <div className="flex flex-wrap items-center gap-3 p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
-                    <div className="flex items-center gap-2">
-                        <span className="font-bold text-sm text-blue-600 dark:text-blue-400">Set {setIndex + 1}</span>
-                    </div>
-                    <div className="flex items-center gap-2 flex-grow">
-                        <span className="text-xl">⚖️</span>
-                        <input
-                            type="number"
-                            placeholder="kg"
-                            value={setData.weight || ''}
-                            onChange={(e) => handleUpdate('weight', e.target.value)}
-                            className="w-20 p-1 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                        />
-                    </div>
-                    <div className="flex items-center gap-2 flex-grow">
-                        <span className="text-xl">🔄</span>
-                        <input
-                            type="number"
-                            placeholder="reps"
-                            value={setData.reps || ''}
-                            onChange={(e) => handleUpdate('reps', e.target.value)}
-                            className="w-20 p-1 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                        />
-                    </div>
-                </div>
-            );
+            return ( <div className="flex flex-wrap items-center gap-3 p-2 rounded-lg bg-gray-100 dark:bg-gray-700"> <div className="flex items-center gap-2"> <span className="font-bold text-sm text-blue-600 dark:text-blue-400">Set {setIndex + 1}</span> </div> <div className="flex items-center gap-2 flex-grow"> <span className="text-xl">⚖️</span> <input type="number" placeholder="kg" value={setData.weight || ''} onChange={(e) => handleUpdate('weight', e.target.value)} className="w-20 p-1 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" /> </div> <div className="flex items-center gap-2 flex-grow"> <span className="text-xl">🔄</span> <input type="number" placeholder="reps" value={setData.reps || ''} onChange={(e) => handleUpdate('reps', e.target.value)} className="w-20 p-1 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" /> </div> </div> );
         };
 
         const ExerciseCard = ({ exercise, exerciseData, onUpdate }) => {
             const isCompleted = exerciseData?.completed || false;
-
             const handleSetUpdate = (setIndex, field, value) => {
                 const newSets = [...(exerciseData?.sets || Array(exercise.sets).fill({}))];
                 newSets[setIndex] = { ...newSets[setIndex], [field]: value };
                 onUpdate(exercise.name, 'sets', newSets);
             };
-
-            const toggleCompleted = () => {
-                onUpdate(exercise.name, 'completed', !isCompleted);
-            };
-
-            const getIcon = () => {
-                switch (exercise.type) {
-                    case 'strength': return <span className="text-2xl">🏋️</span>;
-                    case 'cardio': return <span className="text-2xl">🔥</span>;
-                    case 'core': return <span className="text-2xl">💪</span>;
-                    default: return <span className="text-2xl">🏋️</span>;
-                }
-            };
-            
+            const toggleCompleted = () => { onUpdate(exercise.name, 'completed', !isCompleted); };
+            const getIcon = () => { switch (exercise.type) { case 'strength': return <span className="text-2xl">🏋️</span>; case 'cardio': return <span className="text-2xl">🔥</span>; case 'core': return <span className="text-2xl">💪</span>; default: return <span className="text-2xl">🏋️</span>; }};
             const isCardioOrCore = exercise.type === 'cardio' || exercise.type === 'core';
 
-            return (
-                <div className={`p-4 rounded-xl shadow-md transition-all duration-300 ${isCompleted ? 'bg-green-100 dark:bg-green-900/50' : 'bg-white dark:bg-gray-800'}`}>
-                    <div className="flex justify-between items-start">
-                        <div className="flex-grow">
-                            <div className="flex items-center gap-3 mb-2">
-                                {getIcon()}
-                                <h3 className="font-bold text-lg text-gray-800 dark:text-white">{exercise.name}</h3>
-                            </div>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 ml-9">Target: {exercise.sets} sets of {exercise.reps}</p>
-                        </div>
-                        <button 
-                            onClick={toggleCompleted}
-                            className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors ${isCompleted ? 'bg-green-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'}`}
-                            aria-label={isCompleted ? "Mark as incomplete" : "Mark as complete"}
-                        >
-                           <span className="text-xl">✅</span>
-                        </button>
-                    </div>
-                    
-                    <div className="mt-4 space-y-2 pl-9">
-                        {Array.from({ length: exercise.sets }).map((_, i) => (
-                            <SetTracker 
-                                key={i} 
-                                setIndex={i} 
-                                setData={exerciseData?.sets?.[i] || {}}
-                                onUpdate={handleSetUpdate}
-                                isCardio={isCardioOrCore}
-                                targetReps={exercise.reps}
-                            />
-                        ))}
-                    </div>
-                </div>
-            );
+            return ( <div className={`p-4 rounded-xl shadow-md transition-all duration-300 ${isCompleted ? 'bg-green-100 dark:bg-green-900/50' : 'bg-white dark:bg-gray-800'}`}> <div className="flex justify-between items-start"> <div className="flex-grow"> <div className="flex items-center gap-3 mb-2"> {getIcon()} <h3 className="font-bold text-lg text-gray-800 dark:text-white">{exercise.name}</h3> </div> <p className="text-sm text-gray-500 dark:text-gray-400 ml-9">Target: {exercise.sets} sets of {exercise.reps}</p> </div> <button onClick={toggleCompleted} className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors ${isCompleted ? 'bg-green-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'}`} aria-label={isCompleted ? "Mark as incomplete" : "Mark as complete"}> <span className="text-xl">✅</span> </button> </div> <div className="mt-4 space-y-2 pl-9"> {Array.from({ length: exercise.sets }).map((_, i) => ( <SetTracker key={i} setIndex={i} setData={exerciseData?.sets?.[i] || {}} onUpdate={handleSetUpdate} isCardio={isCardioOrCore} targetReps={exercise.reps} /> ))} </div> </div> );
         };
 
         const WorkoutDay = ({ dayKey, plan, userId }) => {
@@ -213,13 +89,13 @@
             const [isLoading, setIsLoading] = useState(true);
 
             const today = getTodayDateString();
-            const docId = `${today}-${dayKey}`;
+            const sessionId = `${today}-${dayKey}`;
             
             useEffect(() => {
                 if (!userId) return;
                 setIsLoading(true);
-                // **FIX:** Simplified database path
-                const docRef = db.collection('user-workouts').doc(userId).collection('sessions').doc(docId);
+                // Simplified database path for robustness
+                const docRef = db.collection('user-workouts').doc(userId).collection('sessions').doc(sessionId);
 
                 const unsubscribe = docRef.onSnapshot((docSnap) => {
                     if (docSnap.exists) {
@@ -234,65 +110,25 @@
                 });
 
                 return () => unsubscribe();
-            }, [dayKey, userId, docId]);
+            }, [dayKey, userId, sessionId]);
             
             const handleExerciseUpdate = async (exerciseName, field, value) => {
                 if (!userId) return;
-
-                const updatedExerciseData = {
-                    ...workoutData,
-                    [exerciseName]: {
-                        ...(workoutData[exerciseName] || {}),
-                        [field]: value
-                    }
-                };
-
+                const updatedExerciseData = { ...workoutData, [exerciseName]: { ...(workoutData[exerciseName] || {}), [field]: value } };
                 setWorkoutData(updatedExerciseData);
-
                 try {
-                    // **FIX:** Simplified database path
-                    const docRef = db.collection('user-workouts').doc(userId).collection('sessions').doc(docId);
+                    const docRef = db.collection('user-workouts').doc(userId).collection('sessions').doc(sessionId);
                     await docRef.set({ exercises: updatedExerciseData }, { merge: true });
-                } catch (error) => {
-                    console.error("Error saving workout data:", error);
-                }
+                } catch (error) { console.error("Error saving workout data:", error); }
             };
 
-            if (isLoading) {
-                return <div className="text-center p-10 text-gray-700 dark:text-gray-300">Loading workout...</div>;
-            }
+            if (isLoading) { return <div className="text-center p-10 text-gray-700 dark:text-gray-300">Loading workout...</div>; }
 
             const completedCount = Object.values(workoutData).filter(ex => ex.completed).length;
             const totalCount = plan.exercises.length;
             const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
 
-            return (
-                <div className="space-y-4">
-                    <div className="p-4 rounded-xl bg-gray-100 dark:bg-gray-800">
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{plan.name}</h2>
-                        <p className="text-gray-600 dark:text-gray-400">{dayKey} - {today}</p>
-                         <div className="mt-3">
-                            <div className="flex justify-between mb-1">
-                                <span className="text-base font-medium text-blue-700 dark:text-blue-400">Progress</span>
-                                <span className="text-sm font-medium text-blue-700 dark:text-blue-400">{completedCount} / {totalCount} Done</span>
-                            </div>
-                            <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                                <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${progress}%` }}></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="space-y-4">
-                        {plan.exercises.map((exercise, index) => (
-                            <ExerciseCard 
-                                key={index}
-                                exercise={exercise}
-                                exerciseData={workoutData[exercise.name]}
-                                onUpdate={handleExerciseUpdate}
-                            />
-                        ))}
-                    </div>
-                </div>
-            );
+            return ( <div className="space-y-4"> <div className="p-4 rounded-xl bg-gray-100 dark:bg-gray-800"> <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{plan.name}</h2> <p className="text-gray-600 dark:text-gray-400">{dayKey} - {today}</p> <div className="mt-3"> <div className="flex justify-between mb-1"> <span className="text-base font-medium text-blue-700 dark:text-blue-400">Progress</span> <span className="text-sm font-medium text-blue-700 dark:text-blue-400">{completedCount} / {totalCount} Done</span> </div> <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700"> <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: `${progress}%` }}></div> </div> </div> </div> <div className="space-y-4"> {plan.exercises.map((exercise, index) => ( <ExerciseCard key={index} exercise={exercise} exerciseData={workoutData[exercise.name]} onUpdate={handleExerciseUpdate} /> ))} </div> </div> );
         };
 
         function App() {
@@ -301,15 +137,16 @@
             const [isAuthReady, setIsAuthReady] = useState(false);
 
             useEffect(() => {
-                // **FIX:** Simplified authentication, removed dependency on __initial_auth_token
+                // Simplified auth flow for standalone deployment
+                auth.signInAnonymously().catch(error => {
+                    console.error("Anonymous sign-in failed:", error);
+                });
+
                 const unsubscribe = auth.onAuthStateChanged((user) => {
                     if (user) {
                         setUserId(user.uid);
                     } else {
-                        // If no user, sign in anonymously
-                        auth.signInAnonymously().catch((error) => {
-                            console.error("Anonymous sign-in failed:", error);
-                        });
+                        setUserId(null);
                     }
                     setIsAuthReady(true);
                 });
@@ -324,58 +161,9 @@
                 setSelectedDay(dayKeys[nextIndex]);
             };
 
-            if (!isAuthReady) {
-                return (
-                    <div className="flex items-center justify-center h-screen">
-                        <div className="text-xl font-semibold text-gray-700 dark:text-gray-300">Authenticating...</div>
-                    </div>
-                );
-            }
+            if (!isAuthReady) { return ( <div className="flex items-center justify-center h-screen"> <div className="text-xl font-semibold text-gray-700 dark:text-gray-300">Authenticating...</div> </div> ); }
             
-            return (
-                <div className="min-h-screen text-gray-900 dark:text-gray-100 font-sans p-4 sm:p-6 lg:p-8">
-                    <div className="max-w-4xl mx-auto">
-                        <header className="mb-6 text-center">
-                            <h1 className="text-4xl font-extrabold text-gray-800 dark:text-white tracking-tight">Gym Workout Tracker</h1>
-                            <p className="mt-2 text-lg text-gray-600 dark:text-gray-400">Select your workout and track your progress.</p>
-                        </header>
-
-                        <div className="mb-6">
-                            <div className="flex flex-wrap justify-center gap-2 p-2 rounded-xl bg-gray-200 dark:bg-gray-800 shadow-inner">
-                                {Object.keys(workoutPlan).map(dayKey => (
-                                    <button
-                                        key={dayKey}
-                                        onClick={() => setSelectedDay(dayKey)}
-                                        className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors duration-200 flex-grow text-center ${selectedDay === dayKey ? 'bg-blue-600 text-white shadow-md' : 'bg-transparent text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700'}`}
-                                    >
-                                        {dayKey}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        <main>
-                            {userId ? (
-                                <WorkoutDay dayKey={selectedDay} plan={workoutPlan[selectedDay]} userId={userId} />
-                            ) : (
-                                <div className="text-center p-10 bg-white dark:bg-gray-800 rounded-xl shadow-md">
-                                    <p className="text-gray-600 dark:text-gray-400">Initializing session... If this persists, check your connection.</p>
-                                </div>
-                            )}
-                        </main>
-
-                        <footer className="mt-8 text-center">
-                           <button
-                                onClick={handleNextDay}
-                                className="inline-flex items-center gap-2 px-6 py-3 font-semibold text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all transform hover:scale-105"
-                            >
-                                Next Day's Workout <span className="text-lg">→</span>
-                            </button>
-                            <p className="mt-4 text-xs text-gray-500 dark:text-gray-400">Session ID: {userId || 'N/A'}</p>
-                        </footer>
-                    </div>
-                </div>
-            );
+            return ( <div className="min-h-screen text-gray-900 dark:text-gray-100 font-sans p-4 sm:p-6 lg:p-8"> <div className="max-w-4xl mx-auto"> <header className="mb-6 text-center"> <h1 className="text-4xl font-extrabold text-gray-800 dark:text-white tracking-tight">Gym Workout Tracker</h1> <p className="mt-2 text-lg text-gray-600 dark:text-gray-400">Select your workout and track your progress.</p> </header> <div className="mb-6"> <div className="flex flex-wrap justify-center gap-2 p-2 rounded-xl bg-gray-200 dark:bg-gray-800 shadow-inner"> {Object.keys(workoutPlan).map(dayKey => ( <button key={dayKey} onClick={() => setSelectedDay(dayKey)} className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors duration-200 flex-grow text-center ${selectedDay === dayKey ? 'bg-blue-600 text-white shadow-md' : 'bg-transparent text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700'}`} > {dayKey} </button> ))} </div> </div> <main> {userId ? ( <WorkoutDay dayKey={selectedDay} plan={workoutPlan[selectedDay]} userId={userId} /> ) : ( <div className="text-center p-10 bg-white dark:bg-gray-800 rounded-xl shadow-md"> <p className="text-gray-600 dark:text-gray-400">Initializing session... If this persists, check your connection.</p> </div> )} </main> <footer className="mt-8 text-center"> <button onClick={handleNextDay} className="inline-flex items-center gap-2 px-6 py-3 font-semibold text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all transform hover:scale-105" > Next Day's Workout <span className="text-lg">→</span> </button> <p className="mt-4 text-xs text-gray-500 dark:text-gray-400">Session ID: {userId || 'N/A'}</p> </footer> </div> </div> );
         }
 
         const container = document.getElementById('root');
