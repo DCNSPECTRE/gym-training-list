@@ -24,10 +24,15 @@
     <script type="text/babel">
         // --- React Code Starts Here ---
         const { useState, useEffect } = React;
-        
-        // --- Firebase Initialization ---
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = {
+          apiKey: "AIzaSyBGDJu5BGGDeIjVOJLg4qJ_RLcomBHP-k4",
+          authDomain: "gymtracker-a0bf6.firebaseapp.com",
+          projectId: "gymtracker-a0bf6",
+          storageBucket: "gymtracker-a0bf6.firebasestorage.app",
+          messagingSenderId: "635629132798",
+          appId: "1:635629132798:web:7da6f0e5134ffa348b3eaf",
+          measurementId: "G-Y2PQZRJ3VQ"
+        };
         
         // **FIX:** Initialize Firebase using the global `firebase` object
         const app = firebase.initializeApp(firebaseConfig);
