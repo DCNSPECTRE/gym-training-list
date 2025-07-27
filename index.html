@@ -22,8 +22,9 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState, useEffect, useCallback } = React;
         
+        // --- FIREBASE CONFIGURATION ---
         const firebaseConfig = {
           apiKey: "AIzaSyBGDJu5BGGDeIjVOJLg4qJ_RLcomBHP-k4",
           authDomain: "gymtracker-a0bf6.firebaseapp.com",
@@ -33,25 +34,41 @@
           appId: "1:635629132798:web:7da6f0e5134ffa348b3eaf"
         };
         
+        // --- FIREBASE INITIALIZATION ---
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        const workoutPlan = {
+        // --- DEFAULT WORKOUT PLAN DATA ---
+        const defaultWorkoutPlan = {
           "Day 1": { name: "Upper Body Strength A", exercises: [ { name: "Pull-Ups (or Lat Pulldowns)", sets: 3, reps: "6-10", type: "strength", description: "1. Grab the bar with a grip slightly wider than your shoulders.\n2. Pull your chest up to the bar.\n3. Lower yourself down slowly." }, { name: "Dumbbell Shoulder Press", sets: 3, reps: "8-12", type: "strength", description: "1. Sit on a bench with dumbbells at your shoulders.\n2. Press the dumbbells straight up.\n3. Lower them back down with control." }, { name: "Bent-Over Rows", sets: 3, reps: "8-12", type: "strength", description: "1. Hold a barbell with a grip wider than your shoulders.\n2. Bend at your hips, keeping your back straight.\n3. Pull the bar to your lower chest." }, { name: "Dumbbell Incline Press", sets: 3, reps: "10-15", type: "strength", description: "1. Lie on an incline bench with dumbbells at your chest.\n2. Press the dumbbells straight up.\n3. Lower them back down with control." }, { name: "Lateral Raises", sets: 3, reps: "12-15", type: "strength", description: "1. Stand with dumbbells at your sides.\n2. Raise your arms out to the sides until they are parallel to the floor.\n3. Lower them back down slowly." }, { name: "Bicep Curls", sets: 3, reps: "10-15", type: "strength", description: "1. Stand with dumbbells at your sides, palms facing forward.\n2. Curl the dumbbells up to your shoulders.\n3. Lower them back down with control." }, { name: "Tricep Pushdowns", sets: 3, reps: "10-15", type: "strength", description: "1. Attach a straight bar to a high pulley.\n2. Push the bar down until your arms are fully extended.\n3. Return to the starting position slowly." }, { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio", description: "Choose any cardio machine and work at a moderate intensity." }, ]},
           "Day 2": { name: "Lower Body Strength A", exercises: [ { name: "Squats", sets: 4, reps: "8-12", type: "strength", description: "1. Stand with your feet shoulder-width apart.\n2. Lower your hips as if you are sitting in a chair.\n3. Push through your heels to return to the starting position." }, { name: "Romanian Deadlifts", sets: 3, reps: "10-15", type: "strength", description: "1. Hold a barbell in front of your thighs.\n2. Hinge at your hips, keeping your back straight.\n3. Lower the bar until you feel a stretch in your hamstrings." }, { name: "Leg Press", sets: 3, reps: "10-15", type: "strength", description: "1. Sit on the leg press machine with your feet on the platform.\n2. Push the platform away from you.\n3. Return to the starting position slowly." }, { name: "Leg Curls", sets: 3, reps: "12-15", type: "strength", description: "1. Lie face down on the leg curl machine.\n2. Curl your legs up towards your glutes.\n3. Lower the weight back down with control." }, { name: "Calf Raises", sets: 4, reps: "15-20", type: "strength", description: "1. Stand on a raised surface with your heels hanging off.\n2. Raise your heels as high as you can.\n3. Lower them back down slowly." }, { name: "Plank", sets: 3, reps: "30-60s", type: "core", description: "1. Hold your body in a straight line from your head to your heels.\n2. Engage your core and glutes.\n3. Hold for the specified time." }, { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio", description: "Choose any cardio machine and work at a moderate intensity." }, ]},
           "Day 3": { name: "Upper Body Strength B", exercises: [ { name: "T-Bar Row (or Seated Cable Row)", sets: 4, reps: "8-12", type: "strength", description: "1. Stand over the T-bar and grab the handles.\n2. Pull the weight up to your chest.\n3. Lower it back down with control." }, { name: "Overhead Press", sets: 3, reps: "8-12", type: "strength", description: "1. Sit on a bench with a barbell at your shoulders.\n2. Press the barbell straight up.\n3. Lower it back down with control." }, { name: "Dumbbell Flyes", sets: 3, reps: "12-15", type: "strength", description: "1. Lie on a flat bench with dumbbells at your chest.\n2. Lower the dumbbells out to your sides in an arc.\n3. Bring them back to the starting position." }, { name: "Face Pulls", sets: 3, reps: "15-20", type: "strength", description: "1. Attach a rope to a high pulley.\n2. Pull the rope towards your face, keeping your elbows high.\n3. Squeeze your shoulder blades together." }, { name: "Hammer Curls", sets: 3, reps: "10-15", type: "strength", description: "1. Stand with dumbbells at your sides, palms facing each other.\n2. Curl the dumbbells up to your shoulders.\n3. Lower them back down with control." }, { name: "Overhead Tricep Extension", sets: 3, reps: "10-15", type: "strength", description: "1. Sit on a bench with a dumbbell held over your head.\n2. Lower the dumbbell behind your head.\n3. Extend your arms to return to the starting position." }, { name: "Hanging Knee Raises", sets: 3, reps: "10-15", type: "core", description: "1. Hang from a pull-up bar.\n2. Raise your knees to your chest.\n3. Lower them back down with control." }, { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio", description: "Choose any cardio machine and work at a moderate intensity." }, ]},
           "Day 4": { name: "Lower Body Strength B & Core", exercises: [ { name: "Deadlifts (Conventional or Sumo)", sets: 3, reps: "5-8", type: "strength", description: "1. Stand with your feet hip-width apart, with the barbell over your feet.\n2. Hinge at your hips and bend your knees to grab the bar.\n3. Lift the weight by driving through your heels." }, { name: "Lunges (Dumbbell or Bodyweight)", sets: 3, reps: "10-12 / leg", type: "strength", description: "1. Step forward with one leg and lower your hips until both knees are bent at a 90-degree angle.\n2. Push off your front foot to return to the starting position.\n3. Alternate legs." }, { name: "Goblet Squats", sets: 3, reps: "12-15", type: "strength", description: "1. Hold a dumbbell vertically against your chest.\n2. Lower your hips as if you are sitting in a chair.\n3. Push through your heels to return to the starting position." }, { name: "Glute Bridges (or Hip Thrusts)", sets: 3, reps: "12-15", type: "strength", description: "1. Lie on your back with your knees bent and feet flat on the floor.\n2. Push your hips up until your body forms a straight line from your shoulders to your knees.\n3. Lower your hips back down." }, { name: "Leg Extensions", sets: 3, reps: "12-15", type: "strength", description: "1. Sit on the leg extension machine with your shins under the pad.\n2. Extend your legs to lift the weight.\n3. Lower it back down with control." }, { name: "Russian Twists", sets: 3, reps: "15-20 / side", type: "core", description: "1. Sit on the floor with your knees bent and feet off the ground.\n2. Twist your torso from side to side.\n3. Keep your core engaged." }, { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio", description: "Choose any cardio machine and work at a moderate intensity." }, ]},
         };
         
+        // --- HELPER FUNCTIONS & ICONS ---
         const getTodayDateString = () => new Date().toISOString().slice(0, 10);
-
-        // --- ICONS ---
         const CheckIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>;
         const StrengthIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.066 3.111c.736-1.047 2.159-1.229 3.14- .435s1.24 2.408.504 3.455M13.887 18.572c-1.065.733-2.483.54-3.442-.49L4.5 12.5M19.5 12.5c0 .982-.524 1.84-1.32 2.322M4.944 3.111c-.736-1.047-2.159-1.229-3.14-.435s-1.24 2.408-.504 3.455M10.113 18.572c1.065.733 2.483.54 3.442-.49l5.946-5.582M4.5 12.5c0 .982.524 1.84 1.32 2.322" /></svg>;
         const CardioIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>;
         const CoreIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>;
-        const GoogleIcon = () => <svg className="w-5 h-5" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 381.5 512 244 512 110.3 512 0 401.7 0 265.9c0-109.9 66.8-204.1 158.3-241.2V20.5C158.3 8.3 167.1 0 177.5 0h133c10.4 0 19.2 8.3 19.2 20.5v204.3C421.2 57.8 488 151.9 488 261.8zm-252.1 76.5c39.6 0 76.7-11.5 105.7-32.1V158.1c-30.1-5.4-62.1-8.2-95.4-8.2-33.3 0-65.4 2.8-95.4 8.2v148.1c29 20.6 66.1 32.1 105.7 32.1z"></path></svg>;
+        const GoogleIcon = () => <svg className="w-6 h-6" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 381.5 512 244 512 110.3 512 0 401.7 0 265.9c0-109.9 66.8-204.1 158.3-241.2V20.5C158.3 8.3 167.1 0 177.5 0h133c10.4 0 19.2 8.3 19.2 20.5v204.3C421.2 57.8 488 151.9 488 261.8zm-252.1 76.5c39.6 0 76.7-11.5 105.7-32.1V158.1c-30.1-5.4-62.1-8.2-95.4-8.2-33.3 0-65.4 2.8-95.4 8.2v148.1c29 20.6 66.1 32.1 105.7 32.1z"></path></svg>;
+        const TrashIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clipRule="evenodd" /></svg>;
+        const HelpIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4c0-1.167.394-2.243 1.053-3.131" /><path d="M12 21a9 9 0 100-18 9 9 0 000 18z" /></svg>;
+        
+        // --- REACT COMPONENTS ---
+
+        const Modal = ({ isOpen, children }) => {
+            if (!isOpen) return null;
+            return (
+                <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 max-w-md w-full m-4">
+                        {children}
+                    </div>
+                </div>
+            );
+        };
 
         const SetTracker = ({ setIndex, setData, onUpdate, isCardio, targetReps }) => {
             const handleUpdate = (field, value) => { onUpdate(setIndex, field, value === '' ? '' : Math.max(0, parseFloat(value))); };
@@ -61,23 +78,69 @@
 
         const ExerciseCard = ({ exercise, exerciseData, onUpdate, onHelp }) => {
             const isCompleted = exerciseData?.completed || false;
+
             const handleSetUpdate = (setIndex, field, value) => {
                 const newSets = [...(exerciseData?.sets || Array(exercise.sets).fill({}))];
                 newSets[setIndex] = { ...newSets[setIndex], [field]: value };
                 onUpdate(exercise.name, 'sets', newSets);
             };
+
             const toggleCompleted = () => onUpdate(exercise.name, 'completed', !isCompleted);
+
+            const addSet = () => {
+                const currentSets = exerciseData?.sets || Array(exercise.sets).fill({});
+                const newSets = [...currentSets, {}];
+                onUpdate(exercise.name, 'sets', newSets);
+            };
+
+            const removeSet = () => {
+                const currentSets = exerciseData?.sets || Array(exercise.sets).fill({});
+                if (currentSets.length > 1) {
+                    const newSets = currentSets.slice(0, -1);
+                    onUpdate(exercise.name, 'sets', newSets);
+                }
+            };
+
             const getIcon = (type) => { switch (type) { case 'strength': return <StrengthIcon />; case 'cardio': return <CardioIcon />; case 'core': return <CoreIcon />; default: return <StrengthIcon />; }};
-            return <div className={`p-4 rounded-2xl shadow-lg transition-all duration-300 border ${isCompleted ? 'bg-green-50 dark:bg-green-900/30 border-green-300 dark:border-green-700' : 'bg-white dark:bg-gray-800 border-transparent'}`}> <div className="flex justify-between items-start"> <div className="flex-grow"> <div className="flex items-center gap-4 mb-2"> {getIcon(exercise.type)} <div> <h3 className="font-bold text-lg text-gray-800 dark:text-white">{exercise.name}</h3> <p className="text-sm text-gray-500 dark:text-gray-400">Target: {exercise.sets} sets of {exercise.reps}</p> </div> </div> </div> <div className="flex items-center gap-2"> <button onClick={() => onHelp(exercise)} className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300" aria-label="Help">?</button> <button onClick={toggleCompleted} className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 transform active:scale-90 ${isCompleted ? 'bg-green-500 text-white shadow-md' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'}`} aria-label="Toggle Complete"><CheckIcon /></button> </div> </div> <div className="mt-4 space-y-3 pl-12">{Array.from({ length: exercise.sets }).map((_, i) => <SetTracker key={i} setIndex={i} setData={exerciseData?.sets?.[i] || {}} onUpdate={handleSetUpdate} isCardio={exercise.type === 'cardio' || exercise.type === 'core'} targetReps={exercise.reps} />)}</div> </div>;
+            
+            const setsArray = exerciseData?.sets || Array(exercise.sets).fill({});
+
+            return (
+                <div className={`p-4 rounded-2xl shadow-lg transition-all duration-300 border ${isCompleted ? 'bg-green-50 dark:bg-green-900/30 border-green-300 dark:border-green-700' : 'bg-white dark:bg-gray-800 border-transparent'}`}>
+                    <div className="flex justify-between items-start">
+                        <div className="flex-grow">
+                            <div className="flex items-center gap-4 mb-2">
+                                {getIcon(exercise.type)}
+                                <div>
+                                    <h3 className="font-bold text-lg text-gray-800 dark:text-white">{exercise.name}</h3>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">Target: {exercise.sets} sets of {exercise.reps}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <button onClick={() => onHelp(exercise)} className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" aria-label="Help"><HelpIcon /></button>
+                            <button onClick={toggleCompleted} className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 transform active:scale-90 ${isCompleted ? 'bg-green-500 text-white shadow-md' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'}`} aria-label="Toggle Complete"><CheckIcon /></button>
+                        </div>
+                    </div>
+                    <div className="mt-4 space-y-3 pl-12">
+                        {setsArray.map((set, i) => <SetTracker key={i} setIndex={i} setData={set} onUpdate={handleSetUpdate} isCardio={exercise.type === 'cardio' || exercise.type === 'core'} targetReps={exercise.reps} />)}
+                        <div className="flex gap-2 pt-2">
+                             <button onClick={addSet} className="text-xs font-semibold bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 px-3 py-1 rounded-full hover:bg-indigo-200 dark:hover:bg-indigo-900/80 transition-colors">+ Add Set</button>
+                             <button onClick={removeSet} className="text-xs font-semibold bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300 px-3 py-1 rounded-full hover:bg-rose-200 dark:hover:bg-rose-900/80 transition-colors">- Remove Set</button>
+                        </div>
+                    </div>
+                </div>
+            );
         };
 
-        const WorkoutDay = ({ dayKey, plan, userId, onHelp }) => {
+        const WorkoutDay = ({ dayKey, plan, userId, onHelp, openModal }) => {
             const [workoutData, setWorkoutData] = useState({});
             const [isLoading, setIsLoading] = useState(true);
             const today = getTodayDateString();
             const sessionId = `${today}-${dayKey}`;
+            
             useEffect(() => {
-                if (!userId) return;
+                if (!userId || !plan) return;
                 setIsLoading(true);
                 const docRef = db.collection('user-workouts').doc(userId).collection('sessions').doc(sessionId);
                 const unsubscribe = docRef.onSnapshot(docSnap => {
@@ -85,7 +148,8 @@
                     setIsLoading(false);
                 }, error => { console.error("Error fetching workout data:", error); setIsLoading(false); });
                 return () => unsubscribe();
-            }, [dayKey, userId, sessionId]);
+            }, [dayKey, userId, sessionId, plan]);
+            
             const handleExerciseUpdate = async (exerciseName, field, value) => {
                 if (!userId) return;
                 const updatedData = { ...workoutData, [exerciseName]: { ...(workoutData[exerciseName] || {}), [field]: value }};
@@ -93,71 +157,178 @@
                 const docRef = db.collection('user-workouts').doc(userId).collection('sessions').doc(sessionId);
                 await docRef.set({ exercises: updatedData }, { merge: true });
             };
+            
             if (isLoading) return <div className="text-center p-10 text-gray-700 dark:text-gray-300">Loading workout...</div>;
+            if (!plan) return <div className="text-center p-10 text-gray-700 dark:text-gray-400">Select a workout day to begin.</div>;
+
             const completedCount = Object.values(workoutData).filter(ex => ex.completed).length;
             const totalCount = plan.exercises.length;
             const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
-            return <div className="space-y-4"> <div className="p-4 rounded-xl bg-white dark:bg-gray-800 shadow-lg"> <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{plan.name}</h2> <p className="text-gray-600 dark:text-gray-400">{dayKey} - {today}</p> <div className="mt-3"> <div className="flex justify-between mb-1"> <span className="text-base font-medium text-indigo-700 dark:text-indigo-400">Progress</span> <span className="text-sm font-medium text-indigo-700 dark:text-indigo-400">{completedCount} / {totalCount} Done</span> </div> <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700"> <div className="bg-indigo-600 h-2.5 rounded-full" style={{ width: `${progress}%` }}></div> </div> </div> </div> <div className="space-y-4">{plan.exercises.map((ex, i) => <ExerciseCard key={i} exercise={ex} exerciseData={workoutData[ex.name]} onUpdate={handleExerciseUpdate} onHelp={onHelp} />)}</div> </div>;
+            
+            return (
+                <div className="space-y-4">
+                    <div className="p-4 rounded-xl bg-white dark:bg-gray-800 shadow-lg">
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{plan.name}</h2>
+                        <p className="text-gray-600 dark:text-gray-400">{dayKey} - {today}</p>
+                        <div className="mt-3">
+                            <div className="flex justify-between mb-1">
+                                <span className="text-base font-medium text-indigo-700 dark:text-indigo-400">Progress</span>
+                                <span className="text-sm font-medium text-indigo-700 dark:text-indigo-400">{completedCount} / {totalCount} Done</span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                <div className="bg-indigo-600 h-2.5 rounded-full transition-all duration-500" style={{ width: `${progress}%` }}></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="space-y-4">
+                        {plan.exercises.map((ex, i) => <ExerciseCard key={i} exercise={ex} exerciseData={workoutData[ex.name]} onUpdate={handleExerciseUpdate} onHelp={onHelp} />)}
+                        <button onClick={() => openModal('addExercise', { dayKey })} className="w-full mt-4 px-4 py-3 text-lg font-semibold text-white bg-green-500 rounded-xl shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all transform active:scale-95">Add Exercise</button>
+                    </div>
+                </div>
+            );
         };
         
-        const HistoryView = ({ userId }) => {
+        const HistoryView = ({ userId, workoutPlan, openModal }) => {
             const [sessions, setSessions] = useState([]);
             const [isLoading, setIsLoading] = useState(true);
             const [selectedSession, setSelectedSession] = useState(null);
-            useEffect(() => {
-                const fetchHistory = async () => {
-                    if (!userId) return;
-                    setIsLoading(true);
-                    const sessionsRef = db.collection('user-workouts').doc(userId).collection('sessions');
-                    const querySnapshot = await sessionsRef.get();
-                    const sessionsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    sessionsData.sort((a, b) => b.id.localeCompare(a.id));
-                    setSessions(sessionsData);
-                    setIsLoading(false);
-                };
-                fetchHistory();
+            
+            const fetchHistory = useCallback(async () => {
+                if (!userId) return;
+                setIsLoading(true);
+                const sessionsRef = db.collection('user-workouts').doc(userId).collection('sessions');
+                const querySnapshot = await sessionsRef.get();
+                const sessionsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                sessionsData.sort((a, b) => b.id.localeCompare(a.id));
+                setSessions(sessionsData);
+                setIsLoading(false);
             }, [userId]);
 
+            useEffect(() => {
+                fetchHistory();
+            }, [fetchHistory]);
+
+            const handleDelete = (sessionId) => {
+                openModal('confirmDelete', { sessionId, onConfirm: () => {
+                    db.collection('user-workouts').doc(userId).collection('sessions').doc(sessionId).delete()
+                    .then(() => {
+                        fetchHistory();
+                    })
+                    .catch(error => console.error("Error deleting session: ", error));
+                }});
+            };
+            
             if (isLoading) return <div className="text-center p-10 text-gray-700 dark:text-gray-300">Loading history...</div>;
 
             if (selectedSession) {
                 const date = selectedSession.id.substring(0, 10);
                 const dayKey = selectedSession.id.substring(11);
                 const plan = workoutPlan[dayKey];
-                const completedCount = Object.values(selectedSession.exercises).filter(ex => ex.completed).length;
-                const totalCount = plan.exercises.length;
-                return <div className="space-y-4"> <button onClick={() => setSelectedSession(null)} className="inline-flex items-center gap-2 px-4 py-2 font-semibold text-sm text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700">← Back to History</button> <div className="p-4 rounded-xl bg-white dark:bg-gray-800 shadow-lg"> <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{plan.name}</h2> <p className="text-gray-600 dark:text-gray-400">{dayKey} - {date}</p> <p className="text-sm font-medium text-indigo-700 dark:text-indigo-400 mt-2">{completedCount} of {totalCount} exercises completed.</p> </div> <div className="space-y-4">{plan.exercises.map((ex, i) => <ReadOnlyExerciseCard key={i} exercise={ex} exerciseData={selectedSession.exercises[ex.name]} />)}</div> </div>;
+                const completedCount = plan && selectedSession.exercises ? Object.values(selectedSession.exercises).filter(ex => ex.completed).length : 0;
+                const totalCount = plan ? plan.exercises.length : 0;
+                return (
+                    <div className="space-y-4">
+                        <button onClick={() => setSelectedSession(null)} className="inline-flex items-center gap-2 px-4 py-2 font-semibold text-sm text-white bg-gray-600 rounded-lg shadow-md hover:bg-gray-700">← Back to History</button>
+                        <div className="p-4 rounded-xl bg-white dark:bg-gray-800 shadow-lg">
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{plan ? plan.name : "Custom Workout"}</h2>
+                            <p className="text-gray-600 dark:text-gray-400">{dayKey} - {date}</p>
+                            <p className="text-sm font-medium text-indigo-700 dark:text-indigo-400 mt-2">{completedCount} of {totalCount} exercises completed.</p>
+                        </div>
+                        <div className="space-y-4">
+                            {plan && plan.exercises.map((ex, i) => <ReadOnlyExerciseCard key={i} exercise={ex} exerciseData={selectedSession.exercises[ex.name]} />)}
+                        </div>
+                    </div>
+                );
             }
 
-            return <div className="space-y-4"> <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white">Workout History</h2> {sessions.length === 0 ? <p className="text-center text-gray-500 dark:text-gray-400 p-8">No workouts recorded yet. Complete a session to see it here!</p> : <div className="space-y-3">{sessions.map(session => { const date = session.id.substring(0, 10); const dayKey = session.id.substring(11); return <div key={session.id} onClick={() => setSelectedSession(session)} className="p-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"> <p className="font-bold text-gray-800 dark:text-white">{workoutPlan[dayKey]?.name || 'Workout'}</p> <p className="text-sm text-gray-600 dark:text-gray-400">{date}</p> </div>; })}</div>} </div>;
+            return (
+                <div className="space-y-4">
+                    <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white">Workout History</h2>
+                    {sessions.length === 0 ? <p className="text-center text-gray-500 dark:text-gray-400 p-8">No workouts recorded yet. Complete a session to see it here!</p> :
+                        <div className="space-y-3">
+                            {sessions.map(session => {
+                                const date = session.id.substring(0, 10);
+                                const dayKey = session.id.substring(11);
+                                const plan = workoutPlan[dayKey];
+                                return (
+                                    <div key={session.id} className="p-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg flex justify-between items-center">
+                                        <div onClick={() => setSelectedSession(session)} className="flex-grow cursor-pointer">
+                                            <p className="font-bold text-gray-800 dark:text-white">{plan?.name || 'Custom Workout'}</p>
+                                            <p className="text-sm text-gray-600 dark:text-gray-400">{date}</p>
+                                        </div>
+                                        <button onClick={() => handleDelete(session.id)} className="p-3 rounded-full text-gray-400 hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-900/50 transition-colors" aria-label="Delete session">
+                                            <TrashIcon />
+                                        </button>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    }
+                </div>
+            );
         };
+        
+        const WeeklyActivityTracker = ({ userId }) => {
+            const [activity, setActivity] = useState([]);
+            
+            useEffect(() => {
+                if (!userId) return;
 
+                const fetchActivity = async () => {
+                    const today = new Date();
+                    const week = [];
+                    const completedDays = new Set();
+                    
+                    for (let i = 6; i >= 0; i--) {
+                        const date = new Date(today);
+                        date.setDate(today.getDate() - i);
+                        const dayString = date.toLocaleDateString('en-US', { weekday: 'short' });
+                        const dateString = date.toISOString().slice(0, 10);
+                        week.push({ day: dayString, date: dateString, completed: false });
+                    }
+                    
+                    const sevenDaysAgo = week[0].date;
+                    const sessionsRef = db.collection('user-workouts').doc(userId).collection('sessions');
+                    const querySnapshot = await sessionsRef.where(firebase.firestore.FieldPath.documentId(), '>=', sevenDaysAgo).get();
+                    
+                    querySnapshot.forEach(doc => {
+                        const docDate = doc.id.slice(0, 10);
+                        if(Object.values(doc.data().exercises || {}).some(ex => ex.completed)) {
+                            completedDays.add(docDate);
+                        }
+                    });
+
+                    const updatedWeek = week.map(day => ({...day, completed: completedDays.has(day.date)}));
+                    setActivity(updatedWeek);
+                };
+
+                const unsubscribe = db.collection('user-workouts').doc(userId).collection('sessions').onSnapshot(() => fetchActivity());
+                return () => unsubscribe();
+            }, [userId]);
+
+            return (
+                <div className="p-4 rounded-xl bg-white dark:bg-gray-800 shadow-lg mb-6">
+                    <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-3">This Week's Activity</h3>
+                    <div className="flex justify-around">
+                        {activity.map(({ day, completed }, index) => (
+                            <div key={index} className="flex flex-col items-center gap-2">
+                                <span className="text-xs font-bold text-gray-500 dark:text-gray-400">{day.toUpperCase()}</span>
+                                <div className={`w-4 h-4 rounded-full transition-colors ${completed ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'}`}></div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+        
         const ReadOnlyExerciseCard = ({ exercise, exerciseData = {} }) => {
             const getIcon = (type) => { switch (type) { case 'strength': return <StrengthIcon />; case 'cardio': return <CardioIcon />; case 'core': return <CoreIcon />; default: return <StrengthIcon />; }};
             const isCompleted = exerciseData.completed || false;
             return <div className={`p-4 rounded-2xl border ${isCompleted ? 'bg-green-50 dark:bg-green-900/30 border-green-300 dark:border-green-700' : 'bg-white dark:bg-gray-800 border-transparent'}`}> <div className="flex items-center justify-between"> <div className="flex items-center gap-4"> {getIcon(exercise.type)} <div> <h3 className="font-bold text-lg text-gray-800 dark:text-white">{exercise.name}</h3> </div> </div> {isCompleted && <div className="w-12 h-12 flex items-center justify-center bg-green-500 text-white rounded-full"><CheckIcon /></div>} </div> <div className="mt-2 pl-12 space-y-1 text-sm text-gray-700 dark:text-gray-300"> {(exerciseData.sets || []).map((set, i) => <p key={i}>Set {i + 1}: {set.weight || 0} kg x {set.reps || 0} reps</p>)} </div> </div>;
         };
-
+        
         const AuthView = () => {
-            const [isLogin, setIsLogin] = useState(true);
-            const [email, setEmail] = useState('');
-            const [password, setPassword] = useState('');
             const [error, setError] = useState('');
-
-            const handleEmailSubmit = async (e) => {
-                e.preventDefault();
-                setError('');
-                try {
-                    if (isLogin) {
-                        await auth.signInWithEmailAndPassword(email, password);
-                    } else {
-                        await auth.createUserWithEmailAndPassword(email, password);
-                    }
-                } catch (err) {
-                    setError(err.message);
-                }
-            };
-            
             const handleGoogleSignIn = async () => {
                 setError('');
                 try {
@@ -172,132 +343,186 @@
                 <div className="flex flex-col items-center justify-center min-h-screen px-4">
                     <div className="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-2xl shadow-xl">
                         <div className="text-center">
-                            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Welcome Back!</h1>
-                            <p className="mt-2 text-gray-600 dark:text-gray-400">{isLogin ? "Log in to track your workout" : "Create an account to get started"}</p>
+                            <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">Gym Tracker</h1>
+                            <p className="mt-2 text-lg text-gray-600 dark:text-gray-400">Your personal fitness companion.</p>
                         </div>
-
-                        <button onClick={handleGoogleSignIn} className="w-full inline-flex justify-center items-center gap-3 px-4 py-3 text-lg font-semibold text-gray-700 bg-white border-2 border-gray-300 rounded-xl shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600">
-                           <GoogleIcon /> Sign in with Google
-                        </button>
-
-                        <div className="relative flex py-2 items-center">
-                            <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
-                            <span className="flex-shrink mx-4 text-gray-400 dark:text-gray-500">OR</span>
-                            <div className="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
+                        <div className="pt-6">
+                            <button onClick={handleGoogleSignIn} className="w-full inline-flex justify-center items-center gap-4 px-4 py-4 text-lg font-semibold text-gray-700 bg-white border-2 border-gray-300 rounded-xl shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600">
+                               <GoogleIcon /> Sign in with Google
+                            </button>
+                            {error && <p className="text-sm text-red-500 text-center mt-4">{error}</p>}
                         </div>
-
-                        <form onSubmit={handleEmailSubmit} className="space-y-6">
-                            <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required className="w-full px-4 py-3 text-lg bg-gray-100 dark:bg-gray-700 border-2 border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
-                            <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required className="w-full px-4 py-3 text-lg bg-gray-100 dark:bg-gray-700 border-2 border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
-                            {error && <p className="text-sm text-red-500 text-center">{error}</p>}
-                            <button type="submit" className="w-full px-4 py-3 text-lg font-semibold text-white bg-indigo-600 rounded-xl shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all transform active:scale-95">{isLogin ? 'Log In' : 'Sign Up'}</button>
-                        </form>
-                        <p className="text-sm text-center">
-                            <a href="#" onClick={(e) => { e.preventDefault(); setIsLogin(!isLogin); setError(''); }} className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
-                                {isLogin ? "Don't have an account? Sign Up" : "Already have an account? Log In"}
-                            </a>
-                        </p>
                     </div>
                 </div>
             );
         };
         
+        const ModalManager = ({ modal, closeModal, onAddDay, onAddExercise, selectedDay }) => {
+            const { isOpen, type, props } = modal;
+            
+            if (!isOpen) return null;
+
+            switch (type) {
+                case 'help':
+                    return <Modal isOpen={isOpen} onClose={closeModal}>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{props.name}</h2>
+                        <p className="text-gray-600 dark:text-gray-400 whitespace-pre-line">{props.description}</p>
+                        <button onClick={closeModal} className="mt-6 w-full px-4 py-3 text-lg font-semibold text-white bg-indigo-600 rounded-xl shadow-md hover:bg-indigo-700 transition-all">Close</button>
+                    </Modal>;
+                case 'addDay': {
+                    const [dayName, setDayName] = useState('');
+                    const handleSubmit = (e) => { e.preventDefault(); onAddDay(dayName); closeModal(); };
+                    return <Modal isOpen={isOpen} onClose={closeModal}>
+                        <form onSubmit={handleSubmit}>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Add New Workout Day</h2>
+                            <input type="text" placeholder="e.g., Legs & Abs" value={dayName} onChange={e => setDayName(e.target.value)} required className="w-full px-4 py-3 text-lg bg-gray-100 dark:bg-gray-700 border-2 border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4"/>
+                            <div className="flex gap-2">
+                                <button type="button" onClick={closeModal} className="w-full px-4 py-3 font-semibold text-gray-700 bg-gray-200 rounded-xl dark:bg-gray-600 dark:text-gray-200">Cancel</button>
+                                <button type="submit" className="w-full px-4 py-3 font-semibold text-white bg-green-500 rounded-xl">Add Day</button>
+                            </div>
+                        </form>
+                    </Modal>;
+                }
+                case 'addExercise': {
+                    const [name, setName] = useState('');
+                    const [sets, setSets] = useState('');
+                    const [reps, setReps] = useState('');
+                    const handleSubmit = (e) => { e.preventDefault(); onAddExercise(props.dayKey, { name, sets: parseInt(sets), reps, type: 'strength', description: 'Custom workout' }); closeModal(); };
+                    return <Modal isOpen={isOpen} onClose={closeModal}>
+                        <form onSubmit={handleSubmit}>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Add New Exercise</h2>
+                            <input type="text" placeholder="Exercise Name" value={name} onChange={e => setName(e.target.value)} required className="w-full px-4 py-3 text-lg bg-gray-100 dark:bg-gray-700 border-2 border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-2"/>
+                            <input type="number" placeholder="Number of Sets" value={sets} onChange={e => setSets(e.target.value)} required className="w-full px-4 py-3 text-lg bg-gray-100 dark:bg-gray-700 border-2 border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-2"/>
+                            <input type="text" placeholder="Target Reps (e.g., 8-12)" value={reps} onChange={e => setReps(e.target.value)} required className="w-full px-4 py-3 text-lg bg-gray-100 dark:bg-gray-700 border-2 border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4"/>
+                            <div className="flex gap-2">
+                                <button type="button" onClick={closeModal} className="w-full px-4 py-3 font-semibold text-gray-700 bg-gray-200 rounded-xl dark:bg-gray-600 dark:text-gray-200">Cancel</button>
+                                <button type="submit" className="w-full px-4 py-3 font-semibold text-white bg-green-500 rounded-xl">Add Exercise</button>
+                            </div>
+                        </form>
+                    </Modal>;
+                }
+                case 'confirmLogout':
+                    return <Modal isOpen={isOpen} onClose={closeModal}>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Log Out?</h2>
+                        <p className="text-gray-600 dark:text-gray-400 mb-6">Are you sure you want to log out?</p>
+                        <div className="flex gap-2">
+                             <button onClick={closeModal} className="w-full px-4 py-3 font-semibold text-gray-700 bg-gray-200 rounded-xl dark:bg-gray-600 dark:text-gray-200">Cancel</button>
+                             <button onClick={() => { auth.signOut(); closeModal(); }} className="w-full px-4 py-3 font-semibold text-white bg-rose-500 rounded-xl">Log Out</button>
+                        </div>
+                    </Modal>;
+                case 'confirmDelete':
+                    return <Modal isOpen={isOpen} onClose={closeModal}>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Delete Session?</h2>
+                        <p className="text-gray-600 dark:text-gray-400 mb-6">This action cannot be undone. Are you sure you want to delete this workout session from your history?</p>
+                        <div className="flex gap-2">
+                             <button onClick={closeModal} className="w-full px-4 py-3 font-semibold text-gray-700 bg-gray-200 rounded-xl dark:bg-gray-600 dark:text-gray-200">Cancel</button>
+                             <button onClick={() => { props.onConfirm(); closeModal(); }} className="w-full px-4 py-3 font-semibold text-white bg-rose-500 rounded-xl">Delete</button>
+                        </div>
+                    </Modal>;
+                default:
+                    return null;
+            }
+        };
+
         function App() {
             const [view, setView] = useState('tracker');
             const [selectedDay, setSelectedDay] = useState("Day 1");
             const [user, setUser] = useState(null);
             const [isAuthReady, setIsAuthReady] = useState(false);
-            const [showHelp, setShowHelp] = useState(false);
-            const [currentExerciseHelp, setCurrentExerciseHelp] = useState(null);
-            const [customDays, setCustomDays] = useState([]);
-            const [customWorkouts, setCustomWorkouts] = useState({});
+            const [workoutPlan, setWorkoutPlan] = useState({});
+            const [modal, setModal] = useState({ isOpen: false, type: null, props: {} });
 
-            const handleHelp = (exercise) => {
-                setCurrentExerciseHelp(exercise);
-                setShowHelp(true);
-            };
+            const openModal = (type, props = {}) => setModal({ isOpen: true, type, props });
+            const closeModal = () => setModal({ isOpen: false, type: null, props: {} });
 
-            const addDay = (dayName) => {
-                const newDayKey = `Day ${Object.keys(workoutPlan).length + customDays.length + 1}`;
-                setCustomDays([...customDays, { key: newDayKey, name: dayName }]);
-            };
-
-            const addWorkout = (dayKey, workout) => {
-                const newWorkouts = { ...customWorkouts };
-                if (!newWorkouts[dayKey]) {
-                    newWorkouts[dayKey] = [];
-                }
-                newWorkouts[dayKey].push(workout);
-                setCustomWorkouts(newWorkouts);
-            };
+            const planRef = user ? db.collection('user-workouts').doc(user.uid) : null;
 
             useEffect(() => {
                 const unsubscribe = auth.onAuthStateChanged(user => {
                     setUser(user);
                     setIsAuthReady(true);
+                    if (user) {
+                        const userPlanRef = db.collection('user-workouts').doc(user.uid);
+                        userPlanRef.get().then(doc => {
+                            if (doc.exists && doc.data().plan) {
+                                setWorkoutPlan(doc.data().plan);
+                            } else {
+                                setWorkoutPlan(defaultWorkoutPlan);
+                                userPlanRef.set({ plan: defaultWorkoutPlan }, { merge: true });
+                            }
+                        });
+                    } else {
+                        setWorkoutPlan({});
+                    }
                 });
                 return () => unsubscribe();
             }, []);
+
+            const savePlan = (newPlan) => {
+                setWorkoutPlan(newPlan);
+                if (planRef) {
+                    planRef.set({ plan: newPlan }, { merge: true });
+                }
+            };
+
+            const handleAddDay = (dayName) => {
+                const newDayKey = `Day ${Object.keys(workoutPlan).length + 1}`;
+                const newPlan = {...workoutPlan, [newDayKey]: { name: dayName, exercises: [] }};
+                savePlan(newPlan);
+            };
+
+            const handleAddExercise = (dayKey, exercise) => {
+                const newPlan = { ...workoutPlan };
+                if (!newPlan[dayKey].exercises) {
+                    newPlan[dayKey].exercises = [];
+                }
+                newPlan[dayKey].exercises.push(exercise);
+                savePlan(newPlan);
+            };
             
             if (!isAuthReady) return <div className="flex items-center justify-center h-screen"><div className="text-xl font-semibold text-gray-700 dark:text-gray-300">Loading...</div></div>;
             
             if (!user) return <AuthView />;
 
-            const combinedWorkoutPlan = { ...workoutPlan };
-            customDays.forEach(day => {
-                combinedWorkoutPlan[day.key] = { name: day.name, exercises: customWorkouts[day.key] || [] };
-            });
-
             return (
-                <div className="min-h-screen text-gray-900 dark:text-gray-100 p-4 sm:p-6 lg:p-8">
-                    <div className="max-w-4xl mx-auto">
-                        <header className="mb-6 flex justify-between items-center">
-                            <div>
-                                <h1 className="text-3xl font-extrabold text-gray-800 dark:text-white tracking-tight">Gym Tracker</h1>
-                                <p className="mt-1 text-gray-600 dark:text-gray-400">Welcome, {user.displayName || user.email}</p>
+                <>
+                    <div className="min-h-screen text-gray-900 dark:text-gray-100 p-4 sm:p-6 lg:p-8">
+                        <div className="max-w-4xl mx-auto">
+                            <header className="mb-6 flex justify-between items-center">
+                                <div>
+                                    <h1 className="text-3xl font-extrabold text-gray-800 dark:text-white tracking-tight">Gym Tracker</h1>
+                                    <p className="mt-1 text-gray-600 dark:text-gray-400">Welcome, {user.displayName || user.email}</p>
+                                </div>
+                                <button onClick={() => openModal('confirmLogout')} className="px-4 py-2 text-sm font-semibold text-white bg-rose-500 rounded-lg shadow-md hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-all transform active:scale-95">Log Out</button>
+                            </header>
+                            
+                            <WeeklyActivityTracker userId={user.uid} />
+
+                            <div className="mb-6">
+                                <div className="flex justify-center gap-2 p-2 rounded-2xl bg-gray-200 dark:bg-gray-800/50 shadow-inner">
+                                    <button onClick={() => setView('tracker')} className={`px-4 py-3 text-sm font-bold rounded-xl transition-all duration-200 flex-grow text-center ${view === 'tracker' ? 'bg-white dark:bg-gray-700 text-indigo-600 dark:text-white shadow-md' : 'bg-transparent text-gray-600 dark:text-gray-300'}`}>Tracker</button>
+                                    <button onClick={() => setView('history')} className={`px-4 py-3 text-sm font-bold rounded-xl transition-all duration-200 flex-grow text-center ${view === 'history' ? 'bg-white dark:bg-gray-700 text-indigo-600 dark:text-white shadow-md' : 'bg-transparent text-gray-600 dark:text-gray-300'}`}>History</button>
+                                </div>
                             </div>
-                            <button onClick={() => auth.signOut()} className="px-4 py-2 text-sm font-semibold text-white bg-rose-500 rounded-lg shadow-md hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 transition-all transform active:scale-95">Log Out</button>
-                        </header>
-                        
-                        <div className="mb-6">
-                            <div className="flex justify-center gap-2 p-2 rounded-2xl bg-gray-200 dark:bg-gray-800/50 shadow-inner">
-                                <button onClick={() => setView('tracker')} className={`px-4 py-3 text-sm font-bold rounded-xl transition-all duration-200 flex-grow text-center ${view === 'tracker' ? 'bg-white dark:bg-gray-700 text-indigo-600 dark:text-white shadow-md' : 'bg-transparent text-gray-600 dark:text-gray-300'}`}>Tracker</button>
-                                <button onClick={() => setView('history')} className={`px-4 py-3 text-sm font-bold rounded-xl transition-all duration-200 flex-grow text-center ${view === 'history' ? 'bg-white dark:bg-gray-700 text-indigo-600 dark:text-white shadow-md' : 'bg-transparent text-gray-600 dark:text-gray-300'}`}>History</button>
-                            </div>
+
+                            {view === 'tracker' && (
+                                <div className="flex flex-wrap justify-center gap-3 p-2 rounded-2xl bg-gray-200 dark:bg-gray-800/50 shadow-inner mb-6">
+                                    {Object.keys(workoutPlan).map(dayKey => 
+                                        <button key={dayKey} onClick={() => setSelectedDay(dayKey)} className={`px-4 py-3 text-sm font-bold rounded-xl transition-all duration-200 flex-grow text-center ${selectedDay === dayKey ? 'bg-indigo-600 text-white shadow-md' : 'bg-transparent text-gray-600 dark:text-gray-300'}`}>
+                                            {dayKey}
+                                        </button>
+                                    )}
+                                    <button onClick={() => openModal('addDay')} className="px-4 py-3 text-sm font-bold rounded-xl bg-green-500 text-white shadow-md hover:bg-green-600 transition-all duration-200 flex-grow text-center">+</button>
+                                </div>
+                            )}
+
+                            <main>
+                                {view === 'tracker' ? <WorkoutDay dayKey={selectedDay} plan={workoutPlan[selectedDay]} userId={user.uid} onHelp={(ex) => openModal('help', ex)} openModal={openModal} /> : <HistoryView userId={user.uid} workoutPlan={workoutPlan} openModal={openModal} />}
+                            </main>
                         </div>
-
-                        {view === 'tracker' && (
-                            <div className="flex flex-wrap justify-center gap-3 p-2 rounded-2xl bg-gray-200 dark:bg-gray-800/50 shadow-inner mb-6">
-                                {Object.keys(combinedWorkoutPlan).map(dayKey => 
-                                    <button key={dayKey} onClick={() => setSelectedDay(dayKey)} className={`px-4 py-3 text-sm font-bold rounded-xl transition-all duration-200 flex-grow text-center ${selectedDay === dayKey ? 'bg-indigo-600 text-white shadow-md' : 'bg-transparent text-gray-600 dark:text-gray-300'}`}>
-                                        {dayKey}
-                                    </button>
-                                )}
-                                <button onClick={() => { const dayName = prompt("Enter a name for the new day"); if (dayName) { addDay(dayName); } }} className="px-4 py-3 text-sm font-bold rounded-xl bg-green-500 text-white shadow-md hover:bg-green-600 transition-all duration-200 flex-grow text-center">+</button>
-                            </div>
-                        )}
-
-                        <main>
-                            {view === 'tracker' ? (
-                                <>
-                                    <WorkoutDay dayKey={selectedDay} plan={combinedWorkoutPlan[selectedDay]} userId={user.uid} onHelp={handleHelp} />
-                                    <div className="mt-4">
-                                        <button onClick={() => { const workoutName = prompt("Enter the name of the new workout"); const sets = prompt("Enter the number of sets"); const reps = prompt("Enter the number of reps"); if (workoutName && sets && reps) { addWorkout(selectedDay, { name: workoutName, sets: parseInt(sets), reps, type: 'strength', description: 'Custom workout' }); } }} className="w-full px-4 py-3 text-lg font-semibold text-white bg-green-500 rounded-xl shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all transform active:scale-95">Add Workout</button>
-                                    </div>
-                                </>
-                            ) : <HistoryView userId={user.uid} />}
-                        </main>
                     </div>
-                    {showHelp && (
-                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-                            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 max-w-md w-full">
-                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{currentExerciseHelp.name}</h2>
-                                <p className="text-gray-600 dark:text-gray-400 whitespace-pre-line">{currentExerciseHelp.description}</p>
-                                <button onClick={() => setShowHelp(false)} className="mt-6 w-full px-4 py-3 text-lg font-semibold text-white bg-indigo-600 rounded-xl shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all transform active:scale-95">Close</button>
-                            </div>
-                        </div>
-                    )}
-                </div>
+                    <ModalManager modal={modal} closeModal={closeModal} onAddDay={handleAddDay} onAddExercise={handleAddExercise} />
+                </>
             );
         }
 
