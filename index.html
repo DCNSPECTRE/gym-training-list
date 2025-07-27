@@ -38,10 +38,10 @@
         const db = firebase.firestore();
 
         const workoutPlan = {
-          "Day 1": { name: "Upper Body Strength A", exercises: [ { name: "Pull-Ups (or Lat Pulldowns)", sets: 3, reps: "6-10", type: "strength" }, { name: "Dumbbell Shoulder Press", sets: 3, reps: "8-12", type: "strength" }, { name: "Bent-Over Rows", sets: 3, reps: "8-12", type: "strength" }, { name: "Dumbbell Incline Press", sets: 3, reps: "10-15", type: "strength" }, { name: "Lateral Raises", sets: 3, reps: "12-15", type: "strength" }, { name: "Bicep Curls", sets: 3, reps: "10-15", type: "strength" }, { name: "Tricep Pushdowns", sets: 3, reps: "10-15", type: "strength" }, { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio" }, ]},
-          "Day 2": { name: "Lower Body Strength A", exercises: [ { name: "Squats", sets: 4, reps: "8-12", type: "strength" }, { name: "Romanian Deadlifts", sets: 3, reps: "10-15", type: "strength" }, { name: "Leg Press", sets: 3, reps: "10-15", type: "strength" }, { name: "Leg Curls", sets: 3, reps: "12-15", type: "strength" }, { name: "Calf Raises", sets: 4, reps: "15-20", type: "strength" }, { name: "Plank", sets: 3, reps: "30-60s", type: "core" }, { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio" }, ]},
-          "Day 3": { name: "Upper Body Strength B", exercises: [ { name: "T-Bar Row (or Seated Cable Row)", sets: 4, reps: "8-12", type: "strength" }, { name: "Overhead Press", sets: 3, reps: "8-12", type: "strength" }, { name: "Dumbbell Flyes", sets: 3, reps: "12-15", type: "strength" }, { name: "Face Pulls", sets: 3, reps: "15-20", type: "strength" }, { name: "Hammer Curls", sets: 3, reps: "10-15", type: "strength" }, { name: "Overhead Tricep Extension", sets: 3, reps: "10-15", type: "strength" }, { name: "Hanging Knee Raises", sets: 3, reps: "10-15", type: "core" }, { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio" }, ]},
-          "Day 4": { name: "Lower Body Strength B & Core", exercises: [ { name: "Deadlifts (Conventional or Sumo)", sets: 3, reps: "5-8", type: "strength" }, { name: "Lunges (Dumbbell or Bodyweight)", sets: 3, reps: "10-12 / leg", type: "strength" }, { name: "Goblet Squats", sets: 3, reps: "12-15", type: "strength" }, { name: "Glute Bridges (or Hip Thrusts)", sets: 3, reps: "12-15", type: "strength" }, { name: "Leg Extensions", sets: 3, reps: "12-15", type: "strength" }, { name: "Russian Twists", sets: 3, reps: "15-20 / side", type: "core" }, { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio" }, ]},
+          "Day 1": { name: "Upper Body Strength A", exercises: [ { name: "Pull-Ups (or Lat Pulldowns)", sets: 3, reps: "6-10", type: "strength", description: "1. Grab the bar with a grip slightly wider than your shoulders.\n2. Pull your chest up to the bar.\n3. Lower yourself down slowly." }, { name: "Dumbbell Shoulder Press", sets: 3, reps: "8-12", type: "strength", description: "1. Sit on a bench with dumbbells at your shoulders.\n2. Press the dumbbells straight up.\n3. Lower them back down with control." }, { name: "Bent-Over Rows", sets: 3, reps: "8-12", type: "strength", description: "1. Hold a barbell with a grip wider than your shoulders.\n2. Bend at your hips, keeping your back straight.\n3. Pull the bar to your lower chest." }, { name: "Dumbbell Incline Press", sets: 3, reps: "10-15", type: "strength", description: "1. Lie on an incline bench with dumbbells at your chest.\n2. Press the dumbbells straight up.\n3. Lower them back down with control." }, { name: "Lateral Raises", sets: 3, reps: "12-15", type: "strength", description: "1. Stand with dumbbells at your sides.\n2. Raise your arms out to the sides until they are parallel to the floor.\n3. Lower them back down slowly." }, { name: "Bicep Curls", sets: 3, reps: "10-15", type: "strength", description: "1. Stand with dumbbells at your sides, palms facing forward.\n2. Curl the dumbbells up to your shoulders.\n3. Lower them back down with control." }, { name: "Tricep Pushdowns", sets: 3, reps: "10-15", type: "strength", description: "1. Attach a straight bar to a high pulley.\n2. Push the bar down until your arms are fully extended.\n3. Return to the starting position slowly." }, { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio", description: "Choose any cardio machine and work at a moderate intensity." }, ]},
+          "Day 2": { name: "Lower Body Strength A", exercises: [ { name: "Squats", sets: 4, reps: "8-12", type: "strength", description: "1. Stand with your feet shoulder-width apart.\n2. Lower your hips as if you are sitting in a chair.\n3. Push through your heels to return to the starting position." }, { name: "Romanian Deadlifts", sets: 3, reps: "10-15", type: "strength", description: "1. Hold a barbell in front of your thighs.\n2. Hinge at your hips, keeping your back straight.\n3. Lower the bar until you feel a stretch in your hamstrings." }, { name: "Leg Press", sets: 3, reps: "10-15", type: "strength", description: "1. Sit on the leg press machine with your feet on the platform.\n2. Push the platform away from you.\n3. Return to the starting position slowly." }, { name: "Leg Curls", sets: 3, reps: "12-15", type: "strength", description: "1. Lie face down on the leg curl machine.\n2. Curl your legs up towards your glutes.\n3. Lower the weight back down with control." }, { name: "Calf Raises", sets: 4, reps: "15-20", type: "strength", description: "1. Stand on a raised surface with your heels hanging off.\n2. Raise your heels as high as you can.\n3. Lower them back down slowly." }, { name: "Plank", sets: 3, reps: "30-60s", type: "core", description: "1. Hold your body in a straight line from your head to your heels.\n2. Engage your core and glutes.\n3. Hold for the specified time." }, { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio", description: "Choose any cardio machine and work at a moderate intensity." }, ]},
+          "Day 3": { name: "Upper Body Strength B", exercises: [ { name: "T-Bar Row (or Seated Cable Row)", sets: 4, reps: "8-12", type: "strength", description: "1. Stand over the T-bar and grab the handles.\n2. Pull the weight up to your chest.\n3. Lower it back down with control." }, { name: "Overhead Press", sets: 3, reps: "8-12", type: "strength", description: "1. Sit on a bench with a barbell at your shoulders.\n2. Press the barbell straight up.\n3. Lower it back down with control." }, { name: "Dumbbell Flyes", sets: 3, reps: "12-15", type: "strength", description: "1. Lie on a flat bench with dumbbells at your chest.\n2. Lower the dumbbells out to your sides in an arc.\n3. Bring them back to the starting position." }, { name: "Face Pulls", sets: 3, reps: "15-20", type: "strength", description: "1. Attach a rope to a high pulley.\n2. Pull the rope towards your face, keeping your elbows high.\n3. Squeeze your shoulder blades together." }, { name: "Hammer Curls", sets: 3, reps: "10-15", type: "strength", description: "1. Stand with dumbbells at your sides, palms facing each other.\n2. Curl the dumbbells up to your shoulders.\n3. Lower them back down with control." }, { name: "Overhead Tricep Extension", sets: 3, reps: "10-15", type: "strength", description: "1. Sit on a bench with a dumbbell held over your head.\n2. Lower the dumbbell behind your head.\n3. Extend your arms to return to the starting position." }, { name: "Hanging Knee Raises", sets: 3, reps: "10-15", type: "core", description: "1. Hang from a pull-up bar.\n2. Raise your knees to your chest.\n3. Lower them back down with control." }, { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio", description: "Choose any cardio machine and work at a moderate intensity." }, ]},
+          "Day 4": { name: "Lower Body Strength B & Core", exercises: [ { name: "Deadlifts (Conventional or Sumo)", sets: 3, reps: "5-8", type: "strength", description: "1. Stand with your feet hip-width apart, with the barbell over your feet.\n2. Hinge at your hips and bend your knees to grab the bar.\n3. Lift the weight by driving through your heels." }, { name: "Lunges (Dumbbell or Bodyweight)", sets: 3, reps: "10-12 / leg", type: "strength", description: "1. Step forward with one leg and lower your hips until both knees are bent at a 90-degree angle.\n2. Push off your front foot to return to the starting position.\n3. Alternate legs." }, { name: "Goblet Squats", sets: 3, reps: "12-15", type: "strength", description: "1. Hold a dumbbell vertically against your chest.\n2. Lower your hips as if you are sitting in a chair.\n3. Push through your heels to return to the starting position." }, { name: "Glute Bridges (or Hip Thrusts)", sets: 3, reps: "12-15", type: "strength", description: "1. Lie on your back with your knees bent and feet flat on the floor.\n2. Push your hips up until your body forms a straight line from your shoulders to your knees.\n3. Lower your hips back down." }, { name: "Leg Extensions", sets: 3, reps: "12-15", type: "strength", description: "1. Sit on the leg extension machine with your shins under the pad.\n2. Extend your legs to lift the weight.\n3. Lower it back down with control." }, { name: "Russian Twists", sets: 3, reps: "15-20 / side", type: "core", description: "1. Sit on the floor with your knees bent and feet off the ground.\n2. Twist your torso from side to side.\n3. Keep your core engaged." }, { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio", description: "Choose any cardio machine and work at a moderate intensity." }, ]},
         };
         
         const getTodayDateString = () => new Date().toISOString().slice(0, 10);
@@ -59,7 +59,7 @@
             return <div className="grid grid-cols-3 items-center gap-3 p-2 rounded-lg bg-gray-100 dark:bg-gray-800/50"> <span className="font-bold text-sm text-indigo-600 dark:text-indigo-400 pl-2">Set {setIndex + 1}</span> <div className="flex items-center gap-2"> <label htmlFor={`weight-${setIndex}`} className="text-lg">⚖️</label> <input id={`weight-${setIndex}`} type="number" placeholder="kg" value={setData.weight || ''} onChange={(e) => handleUpdate('weight', e.target.value)} className="w-full p-2 text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" /> </div> <div className="flex items-center gap-2"> <label htmlFor={`reps-${setIndex}`} className="text-lg">🔄</label> <input id={`reps-${setIndex}`} type="number" placeholder="reps" value={setData.reps || ''} onChange={(e) => handleUpdate('reps', e.target.value)} className="w-full p-2 text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" /> </div> </div>;
         };
 
-        const ExerciseCard = ({ exercise, exerciseData, onUpdate }) => {
+        const ExerciseCard = ({ exercise, exerciseData, onUpdate, onHelp }) => {
             const isCompleted = exerciseData?.completed || false;
             const handleSetUpdate = (setIndex, field, value) => {
                 const newSets = [...(exerciseData?.sets || Array(exercise.sets).fill({}))];
@@ -68,10 +68,10 @@
             };
             const toggleCompleted = () => onUpdate(exercise.name, 'completed', !isCompleted);
             const getIcon = (type) => { switch (type) { case 'strength': return <StrengthIcon />; case 'cardio': return <CardioIcon />; case 'core': return <CoreIcon />; default: return <StrengthIcon />; }};
-            return <div className={`p-4 rounded-2xl shadow-lg transition-all duration-300 border ${isCompleted ? 'bg-green-50 dark:bg-green-900/30 border-green-300 dark:border-green-700' : 'bg-white dark:bg-gray-800 border-transparent'}`}> <div className="flex justify-between items-start"> <div className="flex-grow"> <div className="flex items-center gap-4 mb-2"> {getIcon(exercise.type)} <div> <h3 className="font-bold text-lg text-gray-800 dark:text-white">{exercise.name}</h3> <p className="text-sm text-gray-500 dark:text-gray-400">Target: {exercise.sets} sets of {exercise.reps}</p> </div> </div> </div> <button onClick={toggleCompleted} className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 transform active:scale-90 ${isCompleted ? 'bg-green-500 text-white shadow-md' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'}`} aria-label="Toggle Complete"><CheckIcon /></button> </div> <div className="mt-4 space-y-3 pl-12">{Array.from({ length: exercise.sets }).map((_, i) => <SetTracker key={i} setIndex={i} setData={exerciseData?.sets?.[i] || {}} onUpdate={handleSetUpdate} isCardio={exercise.type === 'cardio' || exercise.type === 'core'} targetReps={exercise.reps} />)}</div> </div>;
+            return <div className={`p-4 rounded-2xl shadow-lg transition-all duration-300 border ${isCompleted ? 'bg-green-50 dark:bg-green-900/30 border-green-300 dark:border-green-700' : 'bg-white dark:bg-gray-800 border-transparent'}`}> <div className="flex justify-between items-start"> <div className="flex-grow"> <div className="flex items-center gap-4 mb-2"> {getIcon(exercise.type)} <div> <h3 className="font-bold text-lg text-gray-800 dark:text-white">{exercise.name}</h3> <p className="text-sm text-gray-500 dark:text-gray-400">Target: {exercise.sets} sets of {exercise.reps}</p> </div> </div> </div> <div className="flex items-center gap-2"> <button onClick={() => onHelp(exercise)} className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300" aria-label="Help">?</button> <button onClick={toggleCompleted} className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 transform active:scale-90 ${isCompleted ? 'bg-green-500 text-white shadow-md' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'}`} aria-label="Toggle Complete"><CheckIcon /></button> </div> </div> <div className="mt-4 space-y-3 pl-12">{Array.from({ length: exercise.sets }).map((_, i) => <SetTracker key={i} setIndex={i} setData={exerciseData?.sets?.[i] || {}} onUpdate={handleSetUpdate} isCardio={exercise.type === 'cardio' || exercise.type === 'core'} targetReps={exercise.reps} />)}</div> </div>;
         };
 
-        const WorkoutDay = ({ dayKey, plan, userId }) => {
+        const WorkoutDay = ({ dayKey, plan, userId, onHelp }) => {
             const [workoutData, setWorkoutData] = useState({});
             const [isLoading, setIsLoading] = useState(true);
             const today = getTodayDateString();
@@ -97,7 +97,7 @@
             const completedCount = Object.values(workoutData).filter(ex => ex.completed).length;
             const totalCount = plan.exercises.length;
             const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
-            return <div className="space-y-4"> <div className="p-4 rounded-xl bg-white dark:bg-gray-800 shadow-lg"> <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{plan.name}</h2> <p className="text-gray-600 dark:text-gray-400">{dayKey} - {today}</p> <div className="mt-3"> <div className="flex justify-between mb-1"> <span className="text-base font-medium text-indigo-700 dark:text-indigo-400">Progress</span> <span className="text-sm font-medium text-indigo-700 dark:text-indigo-400">{completedCount} / {totalCount} Done</span> </div> <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700"> <div className="bg-indigo-600 h-2.5 rounded-full" style={{ width: `${progress}%` }}></div> </div> </div> </div> <div className="space-y-4">{plan.exercises.map((ex, i) => <ExerciseCard key={i} exercise={ex} exerciseData={workoutData[ex.name]} onUpdate={handleExerciseUpdate} />)}</div> </div>;
+            return <div className="space-y-4"> <div className="p-4 rounded-xl bg-white dark:bg-gray-800 shadow-lg"> <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{plan.name}</h2> <p className="text-gray-600 dark:text-gray-400">{dayKey} - {today}</p> <div className="mt-3"> <div className="flex justify-between mb-1"> <span className="text-base font-medium text-indigo-700 dark:text-indigo-400">Progress</span> <span className="text-sm font-medium text-indigo-700 dark:text-indigo-400">{completedCount} / {totalCount} Done</span> </div> <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700"> <div className="bg-indigo-600 h-2.5 rounded-full" style={{ width: `${progress}%` }}></div> </div> </div> </div> <div className="space-y-4">{plan.exercises.map((ex, i) => <ExerciseCard key={i} exercise={ex} exerciseData={workoutData[ex.name]} onUpdate={handleExerciseUpdate} onHelp={onHelp} />)}</div> </div>;
         };
         
         const HistoryView = ({ userId }) => {
@@ -207,6 +207,29 @@
             const [selectedDay, setSelectedDay] = useState("Day 1");
             const [user, setUser] = useState(null);
             const [isAuthReady, setIsAuthReady] = useState(false);
+            const [showHelp, setShowHelp] = useState(false);
+            const [currentExerciseHelp, setCurrentExerciseHelp] = useState(null);
+            const [customDays, setCustomDays] = useState([]);
+            const [customWorkouts, setCustomWorkouts] = useState({});
+
+            const handleHelp = (exercise) => {
+                setCurrentExerciseHelp(exercise);
+                setShowHelp(true);
+            };
+
+            const addDay = (dayName) => {
+                const newDayKey = `Day ${Object.keys(workoutPlan).length + customDays.length + 1}`;
+                setCustomDays([...customDays, { key: newDayKey, name: dayName }]);
+            };
+
+            const addWorkout = (dayKey, workout) => {
+                const newWorkouts = { ...customWorkouts };
+                if (!newWorkouts[dayKey]) {
+                    newWorkouts[dayKey] = [];
+                }
+                newWorkouts[dayKey].push(workout);
+                setCustomWorkouts(newWorkouts);
+            };
 
             useEffect(() => {
                 const unsubscribe = auth.onAuthStateChanged(user => {
@@ -219,6 +242,11 @@
             if (!isAuthReady) return <div className="flex items-center justify-center h-screen"><div className="text-xl font-semibold text-gray-700 dark:text-gray-300">Loading...</div></div>;
             
             if (!user) return <AuthView />;
+
+            const combinedWorkoutPlan = { ...workoutPlan };
+            customDays.forEach(day => {
+                combinedWorkoutPlan[day.key] = { name: day.name, exercises: customWorkouts[day.key] || [] };
+            });
 
             return (
                 <div className="min-h-screen text-gray-900 dark:text-gray-100 p-4 sm:p-6 lg:p-8">
@@ -240,18 +268,35 @@
 
                         {view === 'tracker' && (
                             <div className="flex flex-wrap justify-center gap-3 p-2 rounded-2xl bg-gray-200 dark:bg-gray-800/50 shadow-inner mb-6">
-                                {Object.keys(workoutPlan).map(dayKey => 
+                                {Object.keys(combinedWorkoutPlan).map(dayKey => 
                                     <button key={dayKey} onClick={() => setSelectedDay(dayKey)} className={`px-4 py-3 text-sm font-bold rounded-xl transition-all duration-200 flex-grow text-center ${selectedDay === dayKey ? 'bg-indigo-600 text-white shadow-md' : 'bg-transparent text-gray-600 dark:text-gray-300'}`}>
                                         {dayKey}
                                     </button>
                                 )}
+                                <button onClick={() => { const dayName = prompt("Enter a name for the new day"); if (dayName) { addDay(dayName); } }} className="px-4 py-3 text-sm font-bold rounded-xl bg-green-500 text-white shadow-md hover:bg-green-600 transition-all duration-200 flex-grow text-center">+</button>
                             </div>
                         )}
 
                         <main>
-                            {view === 'tracker' ? <WorkoutDay dayKey={selectedDay} plan={workoutPlan[selectedDay]} userId={user.uid} /> : <HistoryView userId={user.uid} />}
+                            {view === 'tracker' ? (
+                                <>
+                                    <WorkoutDay dayKey={selectedDay} plan={combinedWorkoutPlan[selectedDay]} userId={user.uid} onHelp={handleHelp} />
+                                    <div className="mt-4">
+                                        <button onClick={() => { const workoutName = prompt("Enter the name of the new workout"); const sets = prompt("Enter the number of sets"); const reps = prompt("Enter the number of reps"); if (workoutName && sets && reps) { addWorkout(selectedDay, { name: workoutName, sets: parseInt(sets), reps, type: 'strength', description: 'Custom workout' }); } }} className="w-full px-4 py-3 text-lg font-semibold text-white bg-green-500 rounded-xl shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all transform active:scale-95">Add Workout</button>
+                                    </div>
+                                </>
+                            ) : <HistoryView userId={user.uid} />}
                         </main>
                     </div>
+                    {showHelp && (
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+                            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 max-w-md w-full">
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{currentExerciseHelp.name}</h2>
+                                <p className="text-gray-600 dark:text-gray-400 whitespace-pre-line">{currentExerciseHelp.description}</p>
+                                <button onClick={() => setShowHelp(false)} className="mt-6 w-full px-4 py-3 text-lg font-semibold text-white bg-indigo-600 rounded-xl shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all transform active:scale-95">Close</button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             );
         }
