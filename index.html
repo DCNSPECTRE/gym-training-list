@@ -47,15 +47,15 @@
           "Day 4": { name: "Lower Body Strength B & Core", exercises: [ { name: "Deadlifts (Conventional or Sumo)", sets: 3, reps: "5-8", type: "strength", description: "1. Stand with your feet hip-width apart, with the barbell over your feet.\n2. Hinge at your hips and bend your knees to grab the bar.\n3. Lift the weight by driving through your heels." }, { name: "Lunges (Dumbbell or Bodyweight)", sets: 3, reps: "10-12 / leg", type: "strength", description: "1. Step forward with one leg and lower your hips until both knees are bent at a 90-degree angle.\n2. Push off your front foot to return to the starting position.\n3. Alternate legs." }, { name: "Goblet Squats", sets: 3, reps: "12-15", type: "strength", description: "1. Hold a dumbbell vertically against your chest.\n2. Lower your hips as if you are sitting in a chair.\n3. Push through your heels to return to the starting position." }, { name: "Glute Bridges (or Hip Thrusts)", sets: 3, reps: "12-15", type: "strength", description: "1. Lie on your back with your knees bent and feet flat on the floor.\n2. Push your hips up until your body forms a straight line from your shoulders to your knees.\n3. Lower your hips back down." }, { name: "Leg Extensions", sets: 3, reps: "12-15", type: "strength", description: "1. Sit on the leg extension machine with your shins under the pad.\n2. Extend your legs to lift the weight.\n3. Lower it back down with control." }, { name: "Russian Twists", sets: 3, reps: "15-20 / side", type: "core", description: "1. Sit on the floor with your knees bent and feet off the ground.\n2. Twist your torso from side to side.\n3. Keep your core engaged." }, { name: "Cardio", sets: 1, reps: "15-20 mins", type: "cardio", description: "Choose any cardio machine and work at a moderate intensity." }, ]},
         };
         
-        // --- HELPER FUNCTIONS & ICONS ---
+        // --- HELPER FUNCTIONS & ICONS (CORRECTED) ---
         const getTodayDateString = () => new Date().toISOString().slice(0, 10);
         const CheckIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>;
-        const StrengthIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.066 3.111c.736-1.047 2.159-1.229 3.14- .435s1.24 2.408.504 3.455M13.887 18.572c-1.065.733-2.483.54-3.442-.49L4.5 12.5M19.5 12.5c0 .982-.524 1.84-1.32 2.322M4.944 3.111c-.736-1.047-2.159-1.229-3.14-.435s-1.24 2.408-.504 3.455M10.113 18.572c1.065.733 2.483.54 3.442-.49l5.946-5.582M4.5 12.5c0 .982.524 1.84 1.32 2.322" /></svg>;
-        const CardioIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>;
-        const CoreIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12.75l3 3m0 0l3-3m-3 3v-7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>;
+        const StrengthIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" /></svg>;
+        const CardioIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>;
+        const CoreIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>;
         const GoogleIcon = () => <svg className="w-6 h-6" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 381.5 512 244 512 110.3 512 0 401.7 0 265.9c0-109.9 66.8-204.1 158.3-241.2V20.5C158.3 8.3 167.1 0 177.5 0h133c10.4 0 19.2 8.3 19.2 20.5v204.3C421.2 57.8 488 151.9 488 261.8zm-252.1 76.5c39.6 0 76.7-11.5 105.7-32.1V158.1c-30.1-5.4-62.1-8.2-95.4-8.2-33.3 0-65.4 2.8-95.4 8.2v148.1c29 20.6 66.1 32.1 105.7 32.1z"></path></svg>;
-        const TrashIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clipRule="evenodd" /></svg>;
-        const HelpIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4c0-1.167.394-2.243 1.053-3.131" /><path d="M12 21a9 9 0 100-18 9 9 0 000 18z" /></svg>;
+        const TrashIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>;
+        const HelpIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4c0-1.167.394-2.243 1.053-3.131" /><path d="M12 21a9 9 0 100-18 9 9 0 000 18z" /></svg>;
         
         // --- REACT COMPONENTS ---
 
@@ -76,7 +76,7 @@
             return <div className="grid grid-cols-3 items-center gap-3 p-2 rounded-lg bg-gray-100 dark:bg-gray-800/50"> <span className="font-bold text-sm text-indigo-600 dark:text-indigo-400 pl-2">Set {setIndex + 1}</span> <div className="flex items-center gap-2"> <label htmlFor={`weight-${setIndex}`} className="text-lg">⚖️</label> <input id={`weight-${setIndex}`} type="number" placeholder="kg" value={setData.weight || ''} onChange={(e) => handleUpdate('weight', e.target.value)} className="w-full p-2 text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" /> </div> <div className="flex items-center gap-2"> <label htmlFor={`reps-${setIndex}`} className="text-lg">🔄</label> <input id={`reps-${setIndex}`} type="number" placeholder="reps" value={setData.reps || ''} onChange={(e) => handleUpdate('reps', e.target.value)} className="w-full p-2 text-sm bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" /> </div> </div>;
         };
 
-        const ExerciseCard = ({ exercise, exerciseData, onUpdate, onHelp }) => {
+        const ExerciseCard = ({ exercise, exerciseData, onUpdate, onHelp, onDeleteExercise }) => {
             const isCompleted = exerciseData?.completed || false;
 
             const handleSetUpdate = (setIndex, field, value) => {
@@ -117,8 +117,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <button onClick={() => onHelp(exercise)} className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" aria-label="Help"><HelpIcon /></button>
+                        <div className="flex items-center gap-1">
+                            <button onClick={onDeleteExercise} className="flex items-center justify-center w-10 h-10 rounded-full text-gray-400 hover:bg-rose-100 dark:hover:bg-rose-900/50 hover:text-rose-500" aria-label="Delete Exercise"><TrashIcon /></button>
+                            <button onClick={() => onHelp(exercise)} className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" aria-label="Help"><HelpIcon /></button>
                             <button onClick={toggleCompleted} className={`flex items-center justify-center w-12 h-12 rounded-full transition-all duration-200 transform active:scale-90 ${isCompleted ? 'bg-green-500 text-white shadow-md' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'}`} aria-label="Toggle Complete"><CheckIcon /></button>
                         </div>
                     </div>
@@ -133,7 +134,7 @@
             );
         };
 
-        const WorkoutDay = ({ dayKey, plan, userId, onHelp, openModal }) => {
+        const WorkoutDay = ({ dayKey, plan, userId, onHelp, openModal, onDeleteExercise }) => {
             const [workoutData, setWorkoutData] = useState({});
             const [isLoading, setIsLoading] = useState(true);
             const today = getTodayDateString();
@@ -181,7 +182,7 @@
                         </div>
                     </div>
                     <div className="space-y-4">
-                        {plan.exercises.map((ex, i) => <ExerciseCard key={i} exercise={ex} exerciseData={workoutData[ex.name]} onUpdate={handleExerciseUpdate} onHelp={onHelp} />)}
+                        {plan.exercises.map((ex, i) => <ExerciseCard key={i} exercise={ex} exerciseData={workoutData[ex.name]} onUpdate={handleExerciseUpdate} onHelp={onHelp} onDeleteExercise={() => onDeleteExercise(ex.name)} />)}
                         <button onClick={() => openModal('addExercise', { dayKey })} className="w-full mt-4 px-4 py-3 text-lg font-semibold text-white bg-green-500 rounded-xl shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all transform active:scale-95">Add Exercise</button>
                     </div>
                 </div>
@@ -209,7 +210,7 @@
             }, [fetchHistory]);
 
             const handleDelete = (sessionId) => {
-                openModal('confirmDelete', { sessionId, onConfirm: () => {
+                openModal('confirmDeleteHistory', { sessionId, onConfirm: () => {
                     db.collection('user-workouts').doc(userId).collection('sessions').doc(sessionId).delete()
                     .then(() => {
                         fetchHistory();
@@ -357,68 +358,34 @@
             );
         };
         
-        const ModalManager = ({ modal, closeModal, onAddDay, onAddExercise, selectedDay }) => {
+        const ModalManager = ({ modal, closeModal, ...handlers }) => {
             const { isOpen, type, props } = modal;
             
             if (!isOpen) return null;
 
             switch (type) {
                 case 'help':
-                    return <Modal isOpen={isOpen} onClose={closeModal}>
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{props.name}</h2>
-                        <p className="text-gray-600 dark:text-gray-400 whitespace-pre-line">{props.description}</p>
-                        <button onClick={closeModal} className="mt-6 w-full px-4 py-3 text-lg font-semibold text-white bg-indigo-600 rounded-xl shadow-md hover:bg-indigo-700 transition-all">Close</button>
-                    </Modal>;
+                    return <Modal isOpen={isOpen}><h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{props.name}</h2><p className="text-gray-600 dark:text-gray-400 whitespace-pre-line">{props.description}</p><button onClick={closeModal} className="mt-6 w-full px-4 py-3 text-lg font-semibold text-white bg-indigo-600 rounded-xl shadow-md hover:bg-indigo-700 transition-all">Close</button></Modal>;
                 case 'addDay': {
                     const [dayName, setDayName] = useState('');
-                    const handleSubmit = (e) => { e.preventDefault(); onAddDay(dayName); closeModal(); };
-                    return <Modal isOpen={isOpen} onClose={closeModal}>
-                        <form onSubmit={handleSubmit}>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Add New Workout Day</h2>
-                            <input type="text" placeholder="e.g., Legs & Abs" value={dayName} onChange={e => setDayName(e.target.value)} required className="w-full px-4 py-3 text-lg bg-gray-100 dark:bg-gray-700 border-2 border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4"/>
-                            <div className="flex gap-2">
-                                <button type="button" onClick={closeModal} className="w-full px-4 py-3 font-semibold text-gray-700 bg-gray-200 rounded-xl dark:bg-gray-600 dark:text-gray-200">Cancel</button>
-                                <button type="submit" className="w-full px-4 py-3 font-semibold text-white bg-green-500 rounded-xl">Add Day</button>
-                            </div>
-                        </form>
-                    </Modal>;
+                    const handleSubmit = (e) => { e.preventDefault(); handlers.onAddDay(dayName); closeModal(); };
+                    return <Modal isOpen={isOpen}><form onSubmit={handleSubmit}><h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Add New Workout Day</h2><input type="text" placeholder="e.g., Legs & Abs" value={dayName} onChange={e => setDayName(e.target.value)} required className="w-full px-4 py-3 text-lg bg-gray-100 dark:bg-gray-700 border-2 border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4"/><div className="flex gap-2"><button type="button" onClick={closeModal} className="w-full px-4 py-3 font-semibold text-gray-700 bg-gray-200 rounded-xl dark:bg-gray-600 dark:text-gray-200">Cancel</button><button type="submit" className="w-full px-4 py-3 font-semibold text-white bg-green-500 rounded-xl">Add Day</button></div></form></Modal>;
                 }
                 case 'addExercise': {
                     const [name, setName] = useState('');
                     const [sets, setSets] = useState('');
                     const [reps, setReps] = useState('');
-                    const handleSubmit = (e) => { e.preventDefault(); onAddExercise(props.dayKey, { name, sets: parseInt(sets), reps, type: 'strength', description: 'Custom workout' }); closeModal(); };
-                    return <Modal isOpen={isOpen} onClose={closeModal}>
-                        <form onSubmit={handleSubmit}>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Add New Exercise</h2>
-                            <input type="text" placeholder="Exercise Name" value={name} onChange={e => setName(e.target.value)} required className="w-full px-4 py-3 text-lg bg-gray-100 dark:bg-gray-700 border-2 border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-2"/>
-                            <input type="number" placeholder="Number of Sets" value={sets} onChange={e => setSets(e.target.value)} required className="w-full px-4 py-3 text-lg bg-gray-100 dark:bg-gray-700 border-2 border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-2"/>
-                            <input type="text" placeholder="Target Reps (e.g., 8-12)" value={reps} onChange={e => setReps(e.target.value)} required className="w-full px-4 py-3 text-lg bg-gray-100 dark:bg-gray-700 border-2 border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4"/>
-                            <div className="flex gap-2">
-                                <button type="button" onClick={closeModal} className="w-full px-4 py-3 font-semibold text-gray-700 bg-gray-200 rounded-xl dark:bg-gray-600 dark:text-gray-200">Cancel</button>
-                                <button type="submit" className="w-full px-4 py-3 font-semibold text-white bg-green-500 rounded-xl">Add Exercise</button>
-                            </div>
-                        </form>
-                    </Modal>;
+                    const handleSubmit = (e) => { e.preventDefault(); handlers.onAddExercise(props.dayKey, { name, sets: parseInt(sets), reps, type: 'strength', description: 'Custom workout' }); closeModal(); };
+                    return <Modal isOpen={isOpen}><form onSubmit={handleSubmit}><h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Add New Exercise</h2><input type="text" placeholder="Exercise Name" value={name} onChange={e => setName(e.target.value)} required className="w-full px-4 py-3 text-lg bg-gray-100 dark:bg-gray-700 border-2 border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-2"/><input type="number" placeholder="Number of Sets" value={sets} onChange={e => setSets(e.target.value)} required className="w-full px-4 py-3 text-lg bg-gray-100 dark:bg-gray-700 border-2 border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-2"/><input type="text" placeholder="Target Reps (e.g., 8-12)" value={reps} onChange={e => setReps(e.target.value)} required className="w-full px-4 py-3 text-lg bg-gray-100 dark:bg-gray-700 border-2 border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4"/><div className="flex gap-2"><button type="button" onClick={closeModal} className="w-full px-4 py-3 font-semibold text-gray-700 bg-gray-200 rounded-xl dark:bg-gray-600 dark:text-gray-200">Cancel</button><button type="submit" className="w-full px-4 py-3 font-semibold text-white bg-green-500 rounded-xl">Add Exercise</button></div></form></Modal>;
                 }
                 case 'confirmLogout':
-                    return <Modal isOpen={isOpen} onClose={closeModal}>
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Log Out?</h2>
-                        <p className="text-gray-600 dark:text-gray-400 mb-6">Are you sure you want to log out?</p>
-                        <div className="flex gap-2">
-                             <button onClick={closeModal} className="w-full px-4 py-3 font-semibold text-gray-700 bg-gray-200 rounded-xl dark:bg-gray-600 dark:text-gray-200">Cancel</button>
-                             <button onClick={() => { auth.signOut(); closeModal(); }} className="w-full px-4 py-3 font-semibold text-white bg-rose-500 rounded-xl">Log Out</button>
-                        </div>
-                    </Modal>;
-                case 'confirmDelete':
-                    return <Modal isOpen={isOpen} onClose={closeModal}>
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Delete Session?</h2>
-                        <p className="text-gray-600 dark:text-gray-400 mb-6">This action cannot be undone. Are you sure you want to delete this workout session from your history?</p>
-                        <div className="flex gap-2">
-                             <button onClick={closeModal} className="w-full px-4 py-3 font-semibold text-gray-700 bg-gray-200 rounded-xl dark:bg-gray-600 dark:text-gray-200">Cancel</button>
-                             <button onClick={() => { props.onConfirm(); closeModal(); }} className="w-full px-4 py-3 font-semibold text-white bg-rose-500 rounded-xl">Delete</button>
-                        </div>
-                    </Modal>;
+                    return <Modal isOpen={isOpen}><h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Log Out?</h2><p className="text-gray-600 dark:text-gray-400 mb-6">Are you sure you want to log out?</p><div className="flex gap-2"><button onClick={closeModal} className="w-full px-4 py-3 font-semibold text-gray-700 bg-gray-200 rounded-xl dark:bg-gray-600 dark:text-gray-200">Cancel</button><button onClick={() => { auth.signOut(); closeModal(); }} className="w-full px-4 py-3 font-semibold text-white bg-rose-500 rounded-xl">Log Out</button></div></Modal>;
+                case 'confirmDeleteHistory':
+                    return <Modal isOpen={isOpen}><h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Delete Session?</h2><p className="text-gray-600 dark:text-gray-400 mb-6">This action cannot be undone. Are you sure you want to delete this workout session from your history?</p><div className="flex gap-2"><button onClick={closeModal} className="w-full px-4 py-3 font-semibold text-gray-700 bg-gray-200 rounded-xl dark:bg-gray-600 dark:text-gray-200">Cancel</button><button onClick={() => { props.onConfirm(); closeModal(); }} className="w-full px-4 py-3 font-semibold text-white bg-rose-500 rounded-xl">Delete</button></div></Modal>;
+                case 'confirmDeleteDay':
+                     return <Modal isOpen={isOpen}><h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Delete Day?</h2><p className="text-gray-600 dark:text-gray-400 mb-6">Are you sure you want to delete the "{props.dayName}" workout day? This action cannot be undone.</p><div className="flex gap-2"><button onClick={closeModal} className="w-full px-4 py-3 font-semibold text-gray-700 bg-gray-200 rounded-xl dark:bg-gray-600 dark:text-gray-200">Cancel</button><button onClick={() => { handlers.onDeleteDay(props.dayKey); closeModal(); }} className="w-full px-4 py-3 font-semibold text-white bg-rose-500 rounded-xl">Delete Day</button></div></Modal>;
+                case 'confirmDeleteExercise':
+                     return <Modal isOpen={isOpen}><h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Delete Exercise?</h2><p className="text-gray-600 dark:text-gray-400 mb-6">Are you sure you want to delete "{props.exerciseName}" from this workout? This action cannot be undone.</p><div className="flex gap-2"><button onClick={closeModal} className="w-full px-4 py-3 font-semibold text-gray-700 bg-gray-200 rounded-xl dark:bg-gray-600 dark:text-gray-200">Cancel</button><button onClick={() => { handlers.onDeleteExercise(props.dayKey, props.exerciseName); closeModal(); }} className="w-full px-4 py-3 font-semibold text-white bg-rose-500 rounded-xl">Delete Exercise</button></div></Modal>;
                 default:
                     return null;
             }
@@ -443,14 +410,15 @@
                     setIsAuthReady(true);
                     if (user) {
                         const userPlanRef = db.collection('user-workouts').doc(user.uid);
-                        userPlanRef.get().then(doc => {
-                            if (doc.exists && doc.data().plan) {
+                        const unsubscribePlan = userPlanRef.onSnapshot(doc => {
+                             if (doc.exists && doc.data().plan) {
                                 setWorkoutPlan(doc.data().plan);
                             } else {
                                 setWorkoutPlan(defaultWorkoutPlan);
                                 userPlanRef.set({ plan: defaultWorkoutPlan }, { merge: true });
                             }
                         });
+                        return () => unsubscribePlan();
                     } else {
                         setWorkoutPlan({});
                     }
@@ -466,17 +434,33 @@
             };
 
             const handleAddDay = (dayName) => {
-                const newDayKey = `Day ${Object.keys(workoutPlan).length + 1}`;
+                const newDayKey = `Custom Day ${Object.keys(workoutPlan).length + 1}`;
                 const newPlan = {...workoutPlan, [newDayKey]: { name: dayName, exercises: [] }};
                 savePlan(newPlan);
             };
 
             const handleAddExercise = (dayKey, exercise) => {
-                const newPlan = { ...workoutPlan };
-                if (!newPlan[dayKey].exercises) {
-                    newPlan[dayKey].exercises = [];
-                }
+                const newPlan = JSON.parse(JSON.stringify(workoutPlan));
+                if (!newPlan[dayKey].exercises) newPlan[dayKey].exercises = [];
                 newPlan[dayKey].exercises.push(exercise);
+                savePlan(newPlan);
+            };
+
+            const handleDeleteDay = (dayKey) => {
+                if (selectedDay === dayKey) {
+                    const remainingKeys = Object.keys(workoutPlan).filter(k => k !== dayKey);
+                    setSelectedDay(remainingKeys[0] || null);
+                }
+                const newPlan = { ...workoutPlan };
+                delete newPlan[dayKey];
+                savePlan(newPlan);
+            };
+
+            const handleDeleteExercise = (dayKey, exerciseName) => {
+                const newPlan = JSON.parse(JSON.stringify(workoutPlan));
+                newPlan[dayKey].exercises = newPlan[dayKey].exercises.filter(
+                    (ex) => ex.name !== exerciseName
+                );
                 savePlan(newPlan);
             };
             
@@ -508,20 +492,25 @@
                             {view === 'tracker' && (
                                 <div className="flex flex-wrap justify-center gap-3 p-2 rounded-2xl bg-gray-200 dark:bg-gray-800/50 shadow-inner mb-6">
                                     {Object.keys(workoutPlan).map(dayKey => 
-                                        <button key={dayKey} onClick={() => setSelectedDay(dayKey)} className={`px-4 py-3 text-sm font-bold rounded-xl transition-all duration-200 flex-grow text-center ${selectedDay === dayKey ? 'bg-indigo-600 text-white shadow-md' : 'bg-transparent text-gray-600 dark:text-gray-300'}`}>
-                                            {dayKey}
-                                        </button>
+                                        <div key={dayKey} className="relative group">
+                                            <button onClick={() => setSelectedDay(dayKey)} className={`py-3 text-sm font-bold rounded-xl transition-all duration-200 text-center ${selectedDay === dayKey ? 'bg-indigo-600 text-white shadow-md px-5' : 'bg-transparent text-gray-600 dark:text-gray-300 px-5'}`}>
+                                                {workoutPlan[dayKey].name}
+                                            </button>
+                                            {!['Day 1', 'Day 2', 'Day 3', 'Day 4'].includes(dayKey) && (
+                                                 <button onClick={() => openModal('confirmDeleteDay', { dayKey, dayName: workoutPlan[dayKey].name })} className="absolute -top-1.5 -right-1.5 bg-rose-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold hover:bg-rose-600 opacity-50 group-hover:opacity-100 transition-opacity">×</button>
+                                            )}
+                                        </div>
                                     )}
                                     <button onClick={() => openModal('addDay')} className="px-4 py-3 text-sm font-bold rounded-xl bg-green-500 text-white shadow-md hover:bg-green-600 transition-all duration-200 flex-grow text-center">+</button>
                                 </div>
                             )}
 
                             <main>
-                                {view === 'tracker' ? <WorkoutDay dayKey={selectedDay} plan={workoutPlan[selectedDay]} userId={user.uid} onHelp={(ex) => openModal('help', ex)} openModal={openModal} /> : <HistoryView userId={user.uid} workoutPlan={workoutPlan} openModal={openModal} />}
+                                {view === 'tracker' ? <WorkoutDay dayKey={selectedDay} plan={workoutPlan[selectedDay]} userId={user.uid} onHelp={(ex) => openModal('help', ex)} openModal={openModal} onDeleteExercise={(exerciseName) => openModal('confirmDeleteExercise', { dayKey: selectedDay, exerciseName })} /> : <HistoryView userId={user.uid} workoutPlan={workoutPlan} openModal={openModal} />}
                             </main>
                         </div>
                     </div>
-                    <ModalManager modal={modal} closeModal={closeModal} onAddDay={handleAddDay} onAddExercise={handleAddExercise} />
+                    <ModalManager modal={modal} closeModal={closeModal} onAddDay={handleAddDay} onAddExercise={handleAddExercise} onDeleteDay={handleDeleteDay} onDeleteExercise={handleDeleteExercise} />
                 </>
             );
         }
